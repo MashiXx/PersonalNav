@@ -1,1 +1,2 @@
-lấy icon Personal NAV làm icon ico của trang
+Ngôn ngữ mặc định của trang là tiếng anh
+người dùng có thể đổi ngôn ngữ trong mục chỉnh sửa profile

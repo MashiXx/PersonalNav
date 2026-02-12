@@ -12,7 +12,7 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilt
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb(new Error('Chỉ chấp nhận file ảnh!'));
+    cb(new Error('flash.imageOnly'));
   }
 };
 
@@ -43,7 +43,7 @@ export class UploadService {
       return filename;
     } catch (error) {
       console.error('Error processing avatar:', error);
-      throw new Error('Không thể xử lý ảnh avatar');
+      throw new Error('flash.avatarProcessError');
     }
   }
 
@@ -66,19 +66,19 @@ export class UploadService {
     return Array.from({ length: 12 }, (_, i) => `default-${i + 1}.svg`);
   }
 
-  // Get list of default icons
+  // Get list of default icons — labels are translation keys
   getDefaultIcons(): { key: string; file: string; label: string }[] {
     return [
-      { key: 'real_estate', file: 'real_estate.svg', label: 'Bất động sản' },
-      { key: 'savings', file: 'savings.svg', label: 'Tiết kiệm' },
-      { key: 'stocks', file: 'stocks.svg', label: 'Cổ phiếu' },
-      { key: 'crypto', file: 'crypto.svg', label: 'Tiền điện tử' },
-      { key: 'gold', file: 'gold.svg', label: 'Vàng' },
-      { key: 'car', file: 'car.svg', label: 'Xe cộ' },
-      { key: 'jewelry', file: 'jewelry.svg', label: 'Trang sức' },
-      { key: 'art', file: 'art.svg', label: 'Nghệ thuật' },
-      { key: 'electronics', file: 'electronics.svg', label: 'Điện tử' },
-      { key: 'other', file: 'other.svg', label: 'Khác' }
+      { key: 'real_estate', file: 'real_estate.svg', label: 'icons.realEstate' },
+      { key: 'savings', file: 'savings.svg', label: 'icons.savings' },
+      { key: 'stocks', file: 'stocks.svg', label: 'icons.stocks' },
+      { key: 'crypto', file: 'crypto.svg', label: 'icons.crypto' },
+      { key: 'gold', file: 'gold.svg', label: 'icons.gold' },
+      { key: 'car', file: 'car.svg', label: 'icons.car' },
+      { key: 'jewelry', file: 'jewelry.svg', label: 'icons.jewelry' },
+      { key: 'art', file: 'art.svg', label: 'icons.art' },
+      { key: 'electronics', file: 'electronics.svg', label: 'icons.electronics' },
+      { key: 'other', file: 'other.svg', label: 'icons.other' }
     ];
   }
 }

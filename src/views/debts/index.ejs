@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,29 +14,29 @@
         <%- include('../partials/flash') %>
 
         <div class="page-header">
-            <h1 class="page-title">Quản lý khoản nợ</h1>
-            <a href="/debts/create" class="btn btn-primary">Thêm khoản nợ mới</a>
+            <h1 class="page-title"><%= t('debts.title') %></h1>
+            <a href="/debts/create" class="btn btn-primary"><%= t('debts.addNew') %></a>
         </div>
 
         <div class="nav-summary">
             <div class="nav-card">
-                <h3>Tổng nợ đang hoạt động</h3>
+                <h3><%= t('debts.totalActiveDebt') %></h3>
                 <p class="nav-value debt"><%= formatCurrency(totalDebt) %></p>
             </div>
         </div>
 
         <% if (debts.length === 0) { %>
-            <p class="empty-state">Không có khoản nợ nào</p>
+            <p class="empty-state"><%= t('debts.emptyState') %></p>
         <% } else { %>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Tên</th>
-                        <th>Số tiền</th>
-                        <th>Lãi suất</th>
-                        <th>Hạn thanh toán</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th><%= t('common.name') %></th>
+                        <th><%= t('debts.amount') %></th>
+                        <th><%= t('debts.interestRate') %></th>
+                        <th><%= t('debts.dueDate') %></th>
+                        <th><%= t('debts.status') %></th>
+                        <th><%= t('common.actions') %></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,9 +48,9 @@
                             <td><%= debt.dueDate ? formatDate(debt.dueDate) : '-' %></td>
                             <td><%= debt.status %></td>
                             <td>
-                                <a href="/debts/<%= debt.id %>/edit" class="btn btn-sm">Sửa</a>
+                                <a href="/debts/<%= debt.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
                                 <form action="/debts/<%= debt.id %>/delete" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('<%= t('common.confirmDelete') %>')"><%= t('common.delete') %></button>
                                 </form>
                             </td>
                         </tr>

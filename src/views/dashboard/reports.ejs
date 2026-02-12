@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,27 +12,27 @@
     <%- include('../partials/header') %>
 
     <main class="container">
-        <h1 class="page-title">Báo cáo thống kê</h1>
+        <h1 class="page-title"><%= t('reports.title') %></h1>
 
         <div class="nav-summary">
             <div class="nav-card">
-                <h3>NAV hiện tại</h3>
+                <h3><%= t('reports.currentNAV') %></h3>
                 <p class="nav-value"><%= formatCurrency(currentNAV.netAssetValue) %></p>
             </div>
         </div>
 
         <div class="reports-section">
-            <h2>Lịch sử NAV theo tháng (<%= selectedYear %>)</h2>
+            <h2><%= t('reports.monthlyHistory') %> (<%= selectedYear %>)</h2>
             <canvas id="monthlyChart"></canvas>
         </div>
 
         <div class="reports-section">
-            <h2>Lịch sử NAV theo năm (5 năm gần nhất)</h2>
+            <h2><%= t('reports.yearlyHistory') %></h2>
             <canvas id="yearlyChart"></canvas>
         </div>
 
         <div class="reports-section">
-            <h2>Phân bổ tài sản theo nhóm</h2>
+            <h2><%= t('reports.assetGroupAllocation') %></h2>
             <canvas id="assetGroupChart"></canvas>
         </div>
     </main>
@@ -40,9 +40,11 @@
     <%- include('../partials/footer') %>
 
     <script>
+        var dateLocale = '<%= locale === "vi" ? "vi-VN" : "en-US" %>';
+
         // Monthly NAV Chart
         const monthlyData = <%- JSON.stringify(monthlySnapshots) %>;
-        const monthlyLabels = monthlyData.map(s => new Date(s.snapshotDate).toLocaleDateString('vi-VN'));
+        const monthlyLabels = monthlyData.map(s => new Date(s.snapshotDate).toLocaleDateString(dateLocale));
         const monthlyValues = monthlyData.map(s => s.netAssetValue);
 
         new Chart(document.getElementById('monthlyChart'), {
@@ -50,7 +52,7 @@
             data: {
                 labels: monthlyLabels,
                 datasets: [{
-                    label: 'NAV theo tháng',
+                    label: '<%= t("reports.navByMonth") %>',
                     data: monthlyValues,
                     borderColor: 'rgb(75, 192, 192)',
                     tension: 0.1
@@ -68,7 +70,7 @@
             data: {
                 labels: yearlyLabels,
                 datasets: [{
-                    label: 'NAV theo năm',
+                    label: '<%= t("reports.navByYear") %>',
                     data: yearlyValues,
                     backgroundColor: 'rgb(54, 162, 235)'
                 }]

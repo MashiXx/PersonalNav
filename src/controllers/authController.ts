@@ -1,32 +1,36 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/authService';
+import { t } from '../config/i18n';
 
 const authService = new AuthService();
 
 export class AuthController {
   async showLoginPage(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     res.render('auth/login', {
-      title: 'Đăng nhập',
+      title: t(locale, 'auth.login'),
       error: req.flash('error'),
       success: req.flash('success')
     });
   }
 
   async showRegisterPage(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     res.render('auth/register', {
-      title: 'Đăng ký',
+      title: t(locale, 'auth.register'),
       error: req.flash('error')
     });
   }
 
   async login(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     try {
       const { username, password, rememberMe } = req.body;
 
       const user = await authService.login(username, password);
 
       if (!user) {
-        req.flash('error', 'Tên đăng nhập hoặc mật khẩu không đúng');
+        req.flash('error', t(locale, 'flash.invalidCredentials'));
         return res.redirect('/auth/login');
       }
 
@@ -46,26 +50,27 @@ export class AuthController {
 
       res.redirect('/dashboard');
     } catch (error) {
-      req.flash('error', 'Đã xảy ra lỗi. Vui lòng thử lại');
+      req.flash('error', t(locale, 'flash.genericError'));
       res.redirect('/auth/login');
     }
   }
 
   async register(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     try {
       const { username, password, confirmPassword, fullName, email } = req.body;
 
       if (password !== confirmPassword) {
-        req.flash('error', 'Mật khẩu xác nhận không khớp');
+        req.flash('error', t(locale, 'flash.passwordMismatch'));
         return res.redirect('/auth/register');
       }
 
       await authService.register(username, password, fullName, email);
 
-      req.flash('success', 'Đăng ký thành công. Vui lòng đăng nhập');
+      req.flash('success', t(locale, 'flash.registerSuccess'));
       res.redirect('/auth/login');
     } catch (error: any) {
-      req.flash('error', error.message);
+      req.flash('error', t(locale, error.message));
       res.redirect('/auth/register');
     }
   }

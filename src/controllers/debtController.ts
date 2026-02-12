@@ -1,17 +1,19 @@
 import { Request, Response } from 'express';
 import { DebtService } from '../services/debtService';
+import { t } from '../config/i18n';
 
 const debtService = new DebtService();
 
 export class DebtController {
   async index(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     try {
       const userId = (req.session as any).userId;
       const debts = await debtService.getAllByUserId(userId);
       const totalDebt = await debtService.getTotalDebt(userId);
 
       res.render('debts/index', {
-        title: 'Quản lý khoản nợ',
+        title: t(locale, 'debts.title'),
         debts,
         totalDebt,
         user: req.session,
@@ -20,20 +22,22 @@ export class DebtController {
       });
     } catch (error) {
       console.error('Error fetching debts:', error);
-      req.flash('error', 'Có lỗi xảy ra khi tải dữ liệu');
+      req.flash('error', t(locale, 'flash.loadDataError'));
       res.redirect('/dashboard');
     }
   }
 
   async showCreateForm(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     res.render('debts/create', {
-      title: 'Thêm khoản nợ mới',
+      title: t(locale, 'debts.addNew'),
       user: req.session,
       error: req.flash('error')
     });
   }
 
   async create(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     try {
       const userId = (req.session as any).userId;
       const { name, description, amount, interestRate, currency, dueDate, status } = req.body;
@@ -49,16 +53,17 @@ export class DebtController {
         status
       );
 
-      req.flash('success', 'Thêm khoản nợ thành công');
+      req.flash('success', t(locale, 'flash.debtCreateSuccess'));
       res.redirect('/debts');
     } catch (error) {
       console.error('Error creating debt:', error);
-      req.flash('error', 'Có lỗi xảy ra khi thêm khoản nợ');
+      req.flash('error', t(locale, 'flash.debtCreateError'));
       res.redirect('/debts/create');
     }
   }
 
   async showEditForm(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     try {
       const userId = (req.session as any).userId;
       const debtId = parseInt(req.params.id);
@@ -66,24 +71,25 @@ export class DebtController {
       const debt = await debtService.getById(debtId, userId);
 
       if (!debt) {
-        req.flash('error', 'Không tìm thấy khoản nợ');
+        req.flash('error', t(locale, 'flash.debtNotFound'));
         return res.redirect('/debts');
       }
 
       res.render('debts/edit', {
-        title: 'Chỉnh sửa khoản nợ',
+        title: t(locale, 'debts.editTitle'),
         debt,
         user: req.session,
         error: req.flash('error')
       });
     } catch (error) {
       console.error('Error fetching debt:', error);
-      req.flash('error', 'Có lỗi xảy ra');
+      req.flash('error', t(locale, 'flash.genericError'));
       res.redirect('/debts');
     }
   }
 
   async update(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     try {
       const userId = (req.session as any).userId;
       const debtId = parseInt(req.params.id);
@@ -102,20 +108,21 @@ export class DebtController {
       );
 
       if (!updated) {
-        req.flash('error', 'Không tìm thấy khoản nợ');
+        req.flash('error', t(locale, 'flash.debtNotFound'));
         return res.redirect('/debts');
       }
 
-      req.flash('success', 'Cập nhật khoản nợ thành công');
+      req.flash('success', t(locale, 'flash.debtUpdateSuccess'));
       res.redirect('/debts');
     } catch (error) {
       console.error('Error updating debt:', error);
-      req.flash('error', 'Có lỗi xảy ra khi cập nhật');
+      req.flash('error', t(locale, 'flash.updateError'));
       res.redirect(`/debts/${req.params.id}/edit`);
     }
   }
 
   async delete(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
     try {
       const userId = (req.session as any).userId;
       const debtId = parseInt(req.params.id);
@@ -123,15 +130,15 @@ export class DebtController {
       const deleted = await debtService.delete(debtId, userId);
 
       if (deleted) {
-        req.flash('success', 'Xóa khoản nợ thành công');
+        req.flash('success', t(locale, 'flash.debtDeleteSuccess'));
       } else {
-        req.flash('error', 'Không tìm thấy khoản nợ');
+        req.flash('error', t(locale, 'flash.debtNotFound'));
       }
 
       res.redirect('/debts');
     } catch (error) {
       console.error('Error deleting debt:', error);
-      req.flash('error', 'Có lỗi xảy ra khi xóa');
+      req.flash('error', t(locale, 'flash.debtDeleteError'));
       res.redirect('/debts');
     }
   }

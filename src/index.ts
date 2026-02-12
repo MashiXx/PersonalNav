@@ -6,6 +6,7 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { initializeDatabase } from './config/database';
 import { getCurrencies, convertToVND, formatByCurrency } from './config/currencies';
+import { t, getLocales } from './config/i18n';
 
 // Import routes
 import authRoutes from './routes/authRoutes';
@@ -45,6 +46,12 @@ app.use(flash() as any);
 
 // Global variables for views
 app.use((req, res, next) => {
+  const locale = (req.session as any)?.locale || 'en';
+
+  res.locals.t = (key: string) => t(locale, key);
+  res.locals.locale = locale;
+  res.locals.locales = getLocales();
+
   res.locals.formatCurrency = (value: number, currencyCode?: string) => {
     return formatByCurrency(value, currencyCode || 'VND');
   };
@@ -53,7 +60,7 @@ app.use((req, res, next) => {
   res.locals.convertToVND = convertToVND;
 
   res.locals.formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('vi-VN');
+    return new Date(date).toLocaleDateString(locale === 'vi' ? 'vi-VN' : 'en-US');
   };
 
   res.locals.avatarPath = (avatar: string) => {
@@ -64,6 +71,16 @@ app.use((req, res, next) => {
   };
 
   next();
+});
+
+// Language switch route
+app.get('/lang/:locale', (req, res) => {
+  const locale = req.params.locale;
+  const available = getLocales().map(l => l.code);
+  if (available.includes(locale)) {
+    (req.session as any).locale = locale;
+  }
+  res.redirect(req.headers.referer || '/dashboard');
 });
 
 // Routes
@@ -84,9 +101,10 @@ app.use('/profile', profileRoutes);
 
 // 404 handler
 app.use((req, res) => {
+  const locale = (req.session as any)?.locale || 'en';
   res.status(404).render('error', {
-    title: 'Không tìm thấy trang',
-    message: 'Trang bạn đang tìm không tồn tại',
+    title: t(locale, 'error.notFound'),
+    message: t(locale, 'error.pageNotExist'),
     user: req.session
   });
 });
@@ -94,9 +112,10 @@ app.use((req, res) => {
 // Error handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error('Error:', err);
+  const locale = (req.session as any)?.locale || 'en';
   res.status(err.status || 500).render('error', {
-    title: 'Lỗi',
-    message: err.message || 'Có lỗi xảy ra',
+    title: t(locale, 'error.error'),
+    message: err.message || t(locale, 'error.genericError'),
     user: req.session
   });
 });

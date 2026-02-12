@@ -11,7 +11,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new Error('Tên đăng nhập hoặc email đã tồn tại');
+      throw new Error('flash.duplicateUser');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

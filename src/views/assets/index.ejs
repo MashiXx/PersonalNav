@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,21 +14,21 @@
         <%- include('../partials/flash') %>
 
         <div class="page-header">
-            <h1 class="page-title">Quản lý tài sản</h1>
-            <a href="/assets/create" class="btn btn-primary">Thêm tài sản mới</a>
+            <h1 class="page-title"><%= t('assets.title') %></h1>
+            <a href="/assets/create" class="btn btn-primary"><%= t('assets.addNew') %></a>
         </div>
 
         <% if (assets.length === 0) { %>
-            <p class="empty-state">Chưa có tài sản nào. <a href="/assets/create">Thêm ngay</a></p>
+            <p class="empty-state"><%= t('assets.emptyState') %> <a href="/assets/create"><%= t('common.addNow') %></a></p>
         <% } else { %>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Tên</th>
-                        <th>Nhóm</th>
-                        <th>Giá trị</th>
-                        <th>Số lượng</th>
-                        <th>Hành động</th>
+                        <th><%= t('common.name') %></th>
+                        <th><%= t('assets.group') %></th>
+                        <th><%= t('common.value') %></th>
+                        <th><%= t('common.quantity') %></th>
+                        <th><%= t('common.actions') %></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,10 +39,10 @@
                             <td><%= formatCurrency(asset.currentValue, asset.currency) %></td>
                             <td><%= asset.quantity %></td>
                             <td>
-                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm">Lịch sử</a>
-                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm">Sửa</a>
+                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm"><%= t('common.history') %></a>
+                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
                                 <form action="/assets/<%= asset.id %>/delete" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('<%= t('common.confirmDelete') %>')"><%= t('common.delete') %></button>
                                 </form>
                             </td>
                         </tr>

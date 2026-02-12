@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,7 @@
             </div>
             <div class="detail-header__right">
                 <div class="detail-header__value"><%= formatCurrency(totalValue) %></div>
-                <span class="detail-header__label"><%= group.assets.length %> tài sản</span>
+                <span class="detail-header__label"><%= group.assets.length %> <%= t('assetGroups.assetsSuffix') %></span>
             </div>
         </div>
 
@@ -35,7 +35,7 @@
             <!-- Asset Allocation Donut -->
             <div class="dash-card">
                 <div class="dash-card__header">
-                    <h2>Phân bổ tài sản trong nhóm</h2>
+                    <h2><%= t('assetGroups.allocationInGroup') %></h2>
                 </div>
                 <div style="max-width: 300px; margin: 0 auto;">
                     <canvas id="groupDonut"></canvas>
@@ -46,7 +46,7 @@
             <!-- Group Value History -->
             <div class="dash-card">
                 <div class="dash-card__header">
-                    <h2>Biến động giá trị nhóm</h2>
+                    <h2><%= t('assetGroups.groupValueChange') %></h2>
                 </div>
                 <div style="position: relative; height: 300px;">
                     <canvas id="groupHistory"></canvas>
@@ -57,16 +57,16 @@
         <!-- Asset Table -->
         <div class="dash-card">
             <div class="dash-card__header">
-                <h2>Danh sách tài sản</h2>
+                <h2><%= t('assetGroups.assetList') %></h2>
             </div>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Tên</th>
-                        <th>Giá trị</th>
-                        <th>Số lượng</th>
-                        <th>Tỷ trọng</th>
-                        <th>Hành động</th>
+                        <th><%= t('common.name') %></th>
+                        <th><%= t('common.value') %></th>
+                        <th><%= t('common.quantity') %></th>
+                        <th><%= t('assetGroups.proportion') %></th>
+                        <th><%= t('common.actions') %></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,8 +77,8 @@
                             <td><%= asset.quantity %></td>
                             <td><%= totalValue > 0 ? (convertToVND(Number(asset.currentValue), asset.currency) / totalValue * 100).toFixed(1) : 0 %>%</td>
                             <td>
-                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm">Biểu đồ</a>
-                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm">Sửa</a>
+                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm"><%= t('common.chart') %></a>
+                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
                             </td>
                         </tr>
                     <% }) %>
@@ -86,12 +86,12 @@
             </table>
         </div>
         <% } else { %>
-            <p class="empty-state">Nhóm này chưa có tài sản nào. <a href="/assets/create">Thêm ngay</a></p>
+            <p class="empty-state"><%= t('assetGroups.emptyGroupState') %> <a href="/assets/create"><%= t('common.addNow') %></a></p>
         <% } %>
 
         <div class="form-actions">
-            <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-primary">Chỉnh sửa nhóm</a>
-            <a href="/asset-groups" class="btn btn-secondary">Quay lại</a>
+            <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-primary"><%= t('assetGroups.editGroup') %></a>
+            <a href="/asset-groups" class="btn btn-secondary"><%= t('common.back') %></a>
         </div>
     </main>
 
@@ -101,6 +101,7 @@
     <script>
         var chartColors = ['#3B82F6', '#F59E0B', '#EF4444', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
         var assets = <%- JSON.stringify(assetsChartData) %>;
+        var dateLocale = '<%= locale === "vi" ? "vi-VN" : "en-US" %>';
 
         // Donut chart - asset allocation
         var donutLabels = assets.map(function(a) { return a.name; });
@@ -150,7 +151,7 @@
             var dates = [];
             var dateSet = {};
             allPoints.forEach(function(p) {
-                var d = new Date(p.date).toLocaleDateString('vi-VN');
+                var d = new Date(p.date).toLocaleDateString(dateLocale);
                 if (!dateSet[d]) { dateSet[d] = true; dates.push(d); }
             });
 
@@ -159,7 +160,7 @@
                 var lastVal = 0;
                 var values = dates.map(function(d) {
                     var point = allPoints.find(function(p) {
-                        return p.idx === idx && new Date(p.date).toLocaleDateString('vi-VN') === d;
+                        return p.idx === idx && new Date(p.date).toLocaleDateString(dateLocale) === d;
                     });
                     if (point) lastVal = point.value;
                     return lastVal;
@@ -190,8 +191,8 @@
                             stacked: true,
                             ticks: {
                                 callback: function(val) {
-                                    if (val >= 1e9) return (val / 1e9).toFixed(1) + ' tỷ';
-                                    if (val >= 1e6) return (val / 1e6).toFixed(0) + ' tr';
+                                    if (val >= 1e9) return (val / 1e9).toFixed(1) + ' <%= t("chart.billion") %>';
+                                    if (val >= 1e6) return (val / 1e6).toFixed(0) + ' <%= t("chart.million") %>';
                                     return val;
                                 }
                             }

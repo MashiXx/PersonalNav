@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,18 +12,18 @@
     <%- include('../partials/header') %>
 
     <main class="container">
-        <h1 class="page-title">Lịch sử giá - <%= asset.name %></h1>
+        <h1 class="page-title"><%= t('assets.priceHistory') %> - <%= asset.name %></h1>
 
         <div class="asset-info">
-            <p><strong>Giá trị hiện tại:</strong> <%= formatCurrency(asset.currentValue) %></p>
-            <p><strong>Số lượng:</strong> <%= asset.quantity %></p>
+            <p><strong><%= t('assets.currentValue') %></strong> <%= formatCurrency(asset.currentValue) %></p>
+            <p><strong><%= t('assets.quantityLabel') %></strong> <%= asset.quantity %></p>
         </div>
 
         <% if (priceHistory.length > 0) { %>
         <!-- Price Chart -->
         <div class="dash-card" style="margin-bottom: 2rem;">
             <div class="dash-card__header">
-                <h2>Biểu đồ giá trị</h2>
+                <h2><%= t('assets.valueChart') %></h2>
             </div>
             <div style="position: relative; height: 350px;">
                 <canvas id="priceChart"></canvas>
@@ -31,18 +31,18 @@
         </div>
         <% } %>
 
-        <h2>Lịch sử thay đổi giá</h2>
+        <h2><%= t('assets.priceChangeHistory') %></h2>
 
         <% if (priceHistory.length === 0) { %>
-            <p class="empty-state">Chưa có lịch sử giá nào</p>
+            <p class="empty-state"><%= t('assets.noPriceHistory') %></p>
         <% } else { %>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Ngày</th>
-                        <th>Giá trị</th>
-                        <th>Số lượng</th>
-                        <th>Ghi chú</th>
+                        <th><%= t('common.date') %></th>
+                        <th><%= t('common.value') %></th>
+                        <th><%= t('common.quantity') %></th>
+                        <th><%= t('common.note') %></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,7 +59,7 @@
         <% } %>
 
         <div class="form-actions">
-            <a href="/assets" class="btn btn-secondary">Quay lại</a>
+            <a href="/assets" class="btn btn-secondary"><%= t('common.back') %></a>
         </div>
     </main>
 
@@ -67,10 +67,11 @@
 
     <% if (priceHistory.length > 0) { %>
     <script>
+        var dateLocale = '<%= locale === "vi" ? "vi-VN" : "en-US" %>';
         var priceData = <%- JSON.stringify(chartData) %>;
 
         var labels = priceData.map(function(h) {
-            return new Date(h.date).toLocaleDateString('vi-VN');
+            return new Date(h.date).toLocaleDateString(dateLocale);
         });
         var values = priceData.map(function(h) { return h.value; });
 
@@ -79,7 +80,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Giá trị',
+                    label: '<%= t("common.value") %>',
                     data: values,
                     borderColor: '#3B82F6',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -101,9 +102,9 @@
                         beginAtZero: false,
                         ticks: {
                             callback: function(val) {
-                                if (val >= 1e9) return (val / 1e9).toFixed(1) + ' tỷ';
-                                if (val >= 1e6) return (val / 1e6).toFixed(0) + ' tr';
-                                return val.toLocaleString('vi-VN');
+                                if (val >= 1e9) return (val / 1e9).toFixed(1) + ' <%= t("chart.billion") %>';
+                                if (val >= 1e6) return (val / 1e6).toFixed(0) + ' <%= t("chart.million") %>';
+                                return val.toLocaleString(dateLocale);
                             }
                         }
                     }

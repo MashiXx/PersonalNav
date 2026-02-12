@@ -1,6 +1,7 @@
 import { AppDataSource } from '../config/database';
 import { Asset } from '../models/Asset';
 import { PriceHistory } from '../models/PriceHistory';
+import { t } from '../config/i18n';
 
 export class AssetService {
   private assetRepository = AppDataSource.getRepository(Asset);
@@ -28,7 +29,8 @@ export class AssetService {
     description: string,
     currentValue: number,
     quantity: number,
-    currency: string
+    currency: string,
+    locale: string = 'en'
   ): Promise<Asset> {
     const asset = this.assetRepository.create({
       userId,
@@ -43,7 +45,7 @@ export class AssetService {
     const savedAsset = await this.assetRepository.save(asset);
 
     // Create initial price history entry
-    await this.addPriceHistory(savedAsset.id, currentValue, quantity, 'Giá trị khởi tạo');
+    await this.addPriceHistory(savedAsset.id, currentValue, quantity, t(locale, 'assets.initialValue'));
 
     return savedAsset;
   }
@@ -56,7 +58,8 @@ export class AssetService {
     description: string,
     currentValue: number,
     quantity: number,
-    currency: string
+    currency: string,
+    locale: string = 'en'
   ): Promise<Asset | null> {
     const asset = await this.getById(id, userId);
 
@@ -77,7 +80,7 @@ export class AssetService {
 
     // Add price history if value changed
     if (valueChanged) {
-      await this.addPriceHistory(id, currentValue, quantity, 'Cập nhật giá trị');
+      await this.addPriceHistory(id, currentValue, quantity, t(locale, 'assets.valueUpdated'));
     }
 
     return savedAsset;

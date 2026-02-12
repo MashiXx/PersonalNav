@@ -1,26 +1,28 @@
-# Personal NAV - Hệ thống Quản lý Tài sản Cá nhân
+# Personal NAV - Personal Asset Management System
 
-Hệ thống quản lý tài sản cá nhân toàn diện, giúp theo dõi tài sản, nợ, và tính toán NAV (Net Asset Value - Giá trị tài sản ròng).
+> **Built entirely through vibe coding with AI.** From architecture to implementation, every line of code in this project was generated through natural language conversations with Claude (Anthropic). No manual coding — just describe what you want, and the AI builds it.
 
-## Tính năng
+A comprehensive personal asset management system for tracking assets, debts, and calculating Net Asset Value (NAV).
 
-- **Đăng nhập/Đăng ký**: Bảo mật thông tin người dùng, Remember Me lên đến 30 ngày
-- **Quản lý nhóm tài sản**: Phân loại tài sản theo nhóm (bất động sản, sổ tiết kiệm, cổ phiếu, crypto, v.v.)
-  - Bảo vệ dữ liệu: Không cho phép xóa nhóm tài sản đã có dữ liệu
-  - Icon tùy chỉnh: 10+ icon mặc định, cho phép upload icon riêng (128x128px)
-  - Mỗi nhóm có loại tiền tệ riêng, tài sản trong nhóm tự động dùng tiền tệ của nhóm
-- **Quản lý tài sản**: Thêm, sửa, xóa tài sản với giá trị và số lượng
-- **Lịch sử giá**: Theo dõi biến động giá trị tài sản theo thời gian
-- **Quản lý khoản nợ**: Theo dõi các khoản nợ với lãi suất và hạn thanh toán
-- **Đa tiền tệ**: Hỗ trợ VND và USD với tỷ giá quy đổi cấu hình trong `src/config/currencies.ts`. Đồng báo cáo là VND
-- **Tính toán NAV**: Tự động tính toán giá trị tài sản ròng (quy đổi về VND)
-- **Báo cáo thống kê**: Biểu đồ NAV theo tháng, năm và phân bổ tài sản
-- **Snapshot NAV**: Lưu trữ lịch sử NAV để theo dõi xu hướng
-- **Trang cá nhân**: Avatar mặc định hoặc upload ảnh cá nhân, cập nhật thông tin
+## Features
 
-## Công nghệ sử dụng
+- **Authentication** — Secure login/registration with Remember Me (up to 30 days)
+- **Asset Group Management** — Organize assets by category (real estate, savings, stocks, crypto, etc.)
+  - Data protection: groups with existing assets cannot be deleted
+  - Custom icons: 10+ built-in icons, plus custom icon upload (128x128px)
+  - Per-group currency: each group has its own currency, assets inherit it automatically
+- **Asset Management** — Create, edit, delete assets with value and quantity tracking
+- **Price History** — Automatic price change tracking over time
+- **Debt Management** — Track debts with interest rates and due dates
+- **Multi-Currency** — VND and USD support with configurable exchange rates. Reporting currency is VND
+- **NAV Calculation** — Automatic net asset value computation (all currencies converted to VND)
+- **Reports & Charts** — Monthly/yearly NAV charts, asset allocation donuts, debt breakdowns
+- **NAV Snapshots** — Save point-in-time NAV states to track trends over time
+- **User Profile** — Default or custom avatar, personal info management
 
-| Layer | Công nghệ |
+## Tech Stack
+
+| Layer | Technology |
 |-------|-----------|
 | Runtime | Node.js + TypeScript |
 | Web Framework | Express |
@@ -30,58 +32,58 @@ Hệ thống quản lý tài sản cá nhân toàn diện, giúp theo dõi tài 
 | Charts | Chart.js |
 | Image Processing | sharp + multer |
 
-## Cài đặt
+## Getting Started
 
-### Yêu cầu
+### Prerequisites
 
 - Node.js 18+
 
-### Bước 1: Clone và cài đặt dependencies
+### Step 1: Install dependencies
 
 ```bash
 npm install
 ```
 
-### Bước 2: Cấu hình
+### Step 2: Configure environment
 
-Sao chép file `.env.example` thành `.env`:
+Copy the example env file:
 
 ```bash
 cp .env.example .env
 ```
 
-Cập nhật thông tin trong file `.env`:
+Edit `.env` as needed:
 
-| Biến | Mặc định | Mô tả |
-|------|----------|-------|
-| `PORT` | `3000` | Port của server |
-| `NODE_ENV` | `development` | Môi trường |
-| `DB_DATABASE` | `./data/personal_nav.sqlite` | Đường dẫn file SQLite |
-| `SESSION_SECRET` | — | Khóa bí mật cho session (cần thay đổi trong production) |
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `3000` | Server port |
+| `NODE_ENV` | `development` | Environment |
+| `DB_DATABASE` | `./data/personal_nav.sqlite` | SQLite file path |
+| `SESSION_SECRET` | — | Session encryption key (change in production) |
 
-Sử dụng SQLite — không cần cài đặt database server riêng.
+Uses SQLite — no external database server required.
 
-### Bước 3: Build và chạy ứng dụng
+### Step 3: Run
 
 ```bash
-# Chạy ở chế độ development (với auto-reload)
+# Development (auto-reload via nodemon)
 npm run dev
 
-# Hoặc build và chạy production
+# Production
 npm run build
 npm start
 ```
 
-Ứng dụng sẽ chạy tại: `http://localhost:3000`
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Cấu trúc thư mục
+## Project Structure
 
 ```
 src/
 ├── config/
-│   ├── database.ts        # Cấu hình TypeORM DataSource
-│   └── currencies.ts      # Định nghĩa tiền tệ và hàm quy đổi
-├── controllers/           # Xử lý HTTP request
+│   ├── database.ts        # TypeORM DataSource configuration
+│   └── currencies.ts      # Currency definitions and conversion helpers
+├── controllers/           # HTTP request handlers
 ├── middleware/
 │   └── auth.ts            # requireAuth / redirectIfAuth guards
 ├── models/                # TypeORM entities
@@ -91,88 +93,102 @@ src/
 │   ├── Debt.ts
 │   ├── PriceHistory.ts
 │   └── NAVSnapshot.ts
-├── routes/                # Định nghĩa routes
-├── services/              # Business logic
+├── routes/                # Express route definitions
+├── services/              # Business logic layer
 ├── views/                 # EJS templates
 │   ├── partials/          # Header, footer, flash messages
 │   ├── auth/              # Login, register
-│   ├── dashboard/         # Tổng quan, báo cáo
-│   ├── asset-groups/      # CRUD + chi tiết nhóm
-│   ├── assets/            # CRUD + lịch sử giá
+│   ├── dashboard/         # Overview, reports
+│   ├── asset-groups/      # CRUD + detail view
+│   ├── assets/            # CRUD + price history
 │   ├── debts/             # CRUD
-│   └── profile/           # Trang cá nhân
+│   └── profile/           # User profile
 ├── public/                # Static assets (CSS, JS, images)
 └── index.ts               # Entry point
 ```
 
-## Đa tiền tệ
+## Multi-Currency
 
-Tiền tệ được cấu hình trong `src/config/currencies.ts`. Mỗi nhóm tài sản có một loại tiền tệ — tất cả tài sản trong nhóm sẽ dùng tiền tệ của nhóm. Khi đổi tiền tệ nhóm, tài sản trong nhóm tự động cập nhật theo.
+Currencies are configured in `src/config/currencies.ts`. Each asset group has a currency set at creation — all assets in the group inherit it. Changing a group's currency automatically updates all its assets.
 
-Để thêm tiền tệ mới, thêm một entry vào mảng `currencies`:
+To add a new currency, add an entry to the `currencies` array:
 
 ```typescript
 { code: 'EUR', name: 'Euro', symbol: '\u20ac', locale: 'de-DE', rateToVND: 27000 }
 ```
 
-Tất cả tổng (dashboard, NAV, báo cáo) được quy đổi về VND.
+All totals (dashboard, NAV, reports) are converted to VND as the reporting currency.
 
-## Sử dụng
+## Usage
 
-1. **Đăng ký** tại `/auth/register`
-2. **Đăng nhập** tại `/auth/login`
-3. **Tạo nhóm tài sản** (Nhóm tài sản > Thêm nhóm mới) — chọn loại, tiền tệ, icon
-4. **Thêm tài sản** vào nhóm — hệ thống tự động lưu lịch sử mỗi khi cập nhật giá trị
-5. **Thêm khoản nợ** với số tiền, lãi suất, hạn thanh toán
-6. **Xem báo cáo** — biểu đồ NAV theo tháng/năm, phân bổ tài sản
-7. **Tạo Snapshot NAV** tại Dashboard để lưu trạng thái hiện tại
+1. **Register** at `/auth/register`
+2. **Log in** at `/auth/login`
+3. **Create asset groups** (Asset Groups > Add New) — choose type, currency, icon
+4. **Add assets** to groups — price history is saved automatically on every update
+5. **Add debts** with amount, interest rate, due date
+6. **View reports** — monthly/yearly NAV charts, asset allocation breakdowns
+7. **Create NAV snapshots** from the Dashboard to save current state
 
 ## Routes
 
 ### Authentication
-- `GET/POST /auth/login` — Đăng nhập
-- `GET/POST /auth/register` — Đăng ký
-- `GET /auth/logout` — Đăng xuất
+- `GET/POST /auth/login` — Log in
+- `GET/POST /auth/register` — Register
+- `GET /auth/logout` — Log out
 
 ### Dashboard
-- `GET /dashboard` — Trang tổng quan
-- `GET /dashboard/reports` — Báo cáo thống kê
-- `POST /dashboard/snapshot` — Tạo NAV snapshot
+- `GET /dashboard` — Overview
+- `GET /dashboard/reports` — Statistics & reports
+- `POST /dashboard/snapshot` — Create NAV snapshot
 
 ### Asset Groups
-- `GET /asset-groups` — Danh sách nhóm
-- `GET /asset-groups/create` — Form tạo mới
-- `POST /asset-groups` — Tạo nhóm
-- `GET /asset-groups/:id` — Chi tiết nhóm
-- `GET /asset-groups/:id/edit` — Form chỉnh sửa
-- `POST /asset-groups/:id` — Cập nhật nhóm
-- `POST /asset-groups/:id/delete` — Xóa nhóm
+- `GET /asset-groups` — List groups
+- `GET /asset-groups/create` — Create form
+- `POST /asset-groups` — Create group
+- `GET /asset-groups/:id` — Group detail
+- `GET /asset-groups/:id/edit` — Edit form
+- `POST /asset-groups/:id` — Update group
+- `POST /asset-groups/:id/delete` — Delete group
 
 ### Assets
-- `GET /assets` — Danh sách tài sản
-- `GET /assets/create` — Form tạo mới
-- `POST /assets` — Tạo tài sản
-- `GET /assets/:id/edit` — Form chỉnh sửa
-- `POST /assets/:id` — Cập nhật tài sản
-- `POST /assets/:id/delete` — Xóa tài sản
-- `GET /assets/:id/history` — Lịch sử giá
+- `GET /assets` — List assets
+- `GET /assets/create` — Create form
+- `POST /assets` — Create asset
+- `GET /assets/:id/edit` — Edit form
+- `POST /assets/:id` — Update asset
+- `POST /assets/:id/delete` — Delete asset
+- `GET /assets/:id/history` — Price history
 
 ### Debts
-- `GET /debts` — Danh sách khoản nợ
-- `GET /debts/create` — Form tạo mới
-- `POST /debts` — Tạo khoản nợ
-- `GET /debts/:id/edit` — Form chỉnh sửa
-- `POST /debts/:id` — Cập nhật khoản nợ
-- `POST /debts/:id/delete` — Xóa khoản nợ
+- `GET /debts` — List debts
+- `GET /debts/create` — Create form
+- `POST /debts` — Create debt
+- `GET /debts/:id/edit` — Edit form
+- `POST /debts/:id` — Update debt
+- `POST /debts/:id/delete` — Delete debt
 
-## Bảo mật
+## Security
 
-- Mật khẩu được hash bằng bcryptjs
+- Passwords hashed with bcryptjs
 - Session-based authentication
-- Middleware kiểm tra đăng nhập cho các route protected
-- SQL injection prevention với TypeORM parameterized queries
-- XSS protection với EJS escaping
-- Data integrity: Ngăn chặn xóa nhóm tài sản có dữ liệu
+- Auth middleware guards on all protected routes
+- SQL injection prevention via TypeORM parameterized queries
+- XSS protection via EJS output escaping
+- Data integrity: asset groups with existing assets cannot be deleted
+
+## Vibe Coding with AI
+
+This entire project was built through conversational AI development — a workflow sometimes called "vibe coding." Instead of writing code manually, features were described in natural language and implemented by Claude. This includes:
+
+- Architecture design (MVC + Service Layer)
+- Database schema and TypeORM entities
+- All controllers, services, and routes
+- EJS views with responsive CSS
+- Chart.js dashboard visualizations
+- Multi-currency conversion system
+- Authentication and session management
+
+The Vietnamese UI, the favicon, the CSS layout fixes — all done through conversation. The `CLAUDE.md` file in the repo serves as persistent context for the AI across sessions.
 
 ## License
 

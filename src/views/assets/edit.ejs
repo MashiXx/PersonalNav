@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,11 +13,11 @@
     <main class="container">
         <%- include('../partials/flash') %>
 
-        <h1 class="page-title">Chỉnh sửa tài sản</h1>
+        <h1 class="page-title"><%= t('assets.editTitle') %></h1>
 
         <form action="/assets/<%= asset.id %>" method="POST" class="form">
             <div class="form-group">
-                <label for="assetGroupId">Nhóm tài sản *</label>
+                <label for="assetGroupId"><%= t('assets.assetGroupRequired') %></label>
                 <select id="assetGroupId" name="assetGroupId" required class="form-control">
                     <% assetGroups.forEach(group => { %>
                         <option value="<%= group.id %>" <%= asset.assetGroupId === group.id ? 'selected' : '' %>><%= group.name %></option>
@@ -26,28 +26,28 @@
             </div>
 
             <div class="form-group">
-                <label for="name">Tên tài sản *</label>
+                <label for="name"><%= t('assets.assetNameRequired') %></label>
                 <input type="text" id="name" name="name" value="<%= asset.name %>" required class="form-control">
             </div>
 
             <div class="form-group">
-                <label for="description">Mô tả</label>
+                <label for="description"><%= t('common.description') %></label>
                 <textarea id="description" name="description" rows="4" class="form-control"><%= asset.description || '' %></textarea>
             </div>
 
             <div class="form-group">
-                <label for="currentValue">Giá trị hiện tại *</label>
+                <label for="currentValue"><%= t('assets.currentValueRequired') %></label>
                 <input type="number" id="currentValue" name="currentValue" value="<%= asset.currentValue %>" step="0.01" required class="form-control">
             </div>
 
             <div class="form-group">
-                <label for="quantity">Số lượng *</label>
+                <label for="quantity"><%= t('assets.quantityRequired') %></label>
                 <input type="number" id="quantity" name="quantity" value="<%= asset.quantity %>" step="0.01" required class="form-control">
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                <a href="/assets" class="btn btn-secondary">Hủy</a>
+                <button type="submit" class="btn btn-primary"><%= t('common.update') %></button>
+                <a href="/assets" class="btn btn-secondary"><%= t('common.cancel') %></a>
             </div>
         </form>
     </main>

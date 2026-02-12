@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,23 +14,23 @@
         <%- include('../partials/flash') %>
 
         <div class="page-header">
-            <h1 class="page-title">Quản lý nhóm tài sản</h1>
-            <a href="/asset-groups/create" class="btn btn-primary">Thêm nhóm mới</a>
+            <h1 class="page-title"><%= t('assetGroups.title') %></h1>
+            <a href="/asset-groups/create" class="btn btn-primary"><%= t('assetGroups.addNew') %></a>
         </div>
 
         <% if (groups.length === 0) { %>
-            <p class="empty-state">Chưa có nhóm tài sản nào. <a href="/asset-groups/create">Tạo ngay</a></p>
+            <p class="empty-state"><%= t('assetGroups.emptyState') %> <a href="/asset-groups/create"><%= t('common.createNow') %></a></p>
         <% } else { %>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Icon</th>
-                        <th>Tên nhóm</th>
-                        <th>Loại</th>
-                        <th>Tiền tệ</th>
-                        <th>Số tài sản</th>
-                        <th>Tổng giá trị</th>
-                        <th>Hành động</th>
+                        <th><%= t('common.icon') %></th>
+                        <th><%= t('assetGroups.groupName') %></th>
+                        <th><%= t('common.type') %></th>
+                        <th><%= t('common.currency') %></th>
+                        <th><%= t('assetGroups.assetCount') %></th>
+                        <th><%= t('common.totalValue') %></th>
+                        <th><%= t('common.actions') %></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,13 +43,13 @@
                             <td><%= group.assetCount %></td>
                             <td><%= formatCurrency(group.totalValue) %></td>
                             <td>
-                                <a href="/asset-groups/<%= group.id %>" class="btn btn-sm btn-primary">Xem</a>
-                                <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-sm">Sửa</a>
+                                <a href="/asset-groups/<%= group.id %>" class="btn btn-sm btn-primary"><%= t('common.view') %></a>
+                                <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
                                 <% if (group.assetCount > 0) { %>
-                                    <button type="button" class="btn btn-sm btn-danger" disabled title="Không thể xóa nhóm đã có dữ liệu">Xóa</button>
+                                    <button type="button" class="btn btn-sm btn-danger" disabled title="<%= t('assetGroups.cannotDeleteWithData') %>"><%= t('common.delete') %></button>
                                 <% } else { %>
                                     <form action="/asset-groups/<%= group.id %>/delete" method="POST" style="display: inline;">
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('<%= t('common.confirmDelete') %>')"><%= t('common.delete') %></button>
                                     </form>
                                 <% } %>
                             </td>

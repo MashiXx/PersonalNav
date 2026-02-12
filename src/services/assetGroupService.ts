@@ -74,17 +74,17 @@ export class AssetGroupService {
     const assetGroup = await this.getById(id, userId);
 
     if (!assetGroup) {
-      return { success: false, message: 'Không tìm thấy nhóm tài sản' };
+      return { success: false, message: 'flash.assetGroupNotFound' };
     }
 
     if (assetGroup.assets && assetGroup.assets.length > 0) {
-      return { success: false, message: 'Không thể xóa nhóm tài sản đã có dữ liệu. Vui lòng xóa tất cả tài sản trong nhóm trước.' };
+      return { success: false, message: 'flash.assetGroupHasData' };
     }
 
     const result = await this.assetGroupRepository.delete({ id, userId });
     return {
       success: result.affected ? result.affected > 0 : false,
-      message: result.affected && result.affected > 0 ? 'Xóa thành công' : 'Xóa thất bại'
+      message: result.affected && result.affected > 0 ? 'flash.deleteSuccess' : 'flash.deleteFailed'
     };
   }
 
