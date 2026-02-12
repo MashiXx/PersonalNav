@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <div class="page-header">
+            <h1 class="page-title">Quản lý nhóm tài sản</h1>
+            <a href="/asset-groups/create" class="btn btn-primary">Thêm nhóm mới</a>
+        </div>
+
+        <% if (groups.length === 0) { %>
+            <p class="empty-state">Chưa có nhóm tài sản nào. <a href="/asset-groups/create">Tạo ngay</a></p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Icon</th>
+                        <th>Tên nhóm</th>
+                        <th>Loại</th>
+                        <th>Tiền tệ</th>
+                        <th>Số tài sản</th>
+                        <th>Tổng giá trị</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% groups.forEach(group => { %>
+                        <tr>
+                            <td><img src="/images/icons/<%= group.icon || 'other.svg' %>" alt="" class="group-icon"></td>
+                            <td><%= group.name %></td>
+                            <td><%= group.type %></td>
+                            <td><%= group.currency %></td>
+                            <td><%= group.assetCount %></td>
+                            <td><%= formatCurrency(group.totalValue) %></td>
+                            <td>
+                                <a href="/asset-groups/<%= group.id %>" class="btn btn-sm btn-primary">Xem</a>
+                                <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-sm">Sửa</a>
+                                <% if (group.assetCount > 0) { %>
+                                    <button type="button" class="btn btn-sm btn-danger" disabled title="Không thể xóa nhóm đã có dữ liệu">Xóa</button>
+                                <% } else { %>
+                                    <form action="/asset-groups/<%= group.id %>/delete" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

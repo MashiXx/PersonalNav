@@ -1,0 +1,21 @@
+<header class="header">
+    <div class="header-container">
+        <div class="logo">
+            <a href="/dashboard"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 6px;"><path d="M12 3L2 12h3v8a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-8h3L12 3z"/></svg>Personal NAV</a>
+        </div>
+        <nav class="nav">
+            <a href="/dashboard" class="nav-link">Tổng quan</a>
+            <a href="/asset-groups" class="nav-link">Nhóm tài sản</a>
+            <a href="/assets" class="nav-link">Tài sản</a>
+            <a href="/debts" class="nav-link">Khoản nợ</a>
+            <a href="/dashboard/reports" class="nav-link">Báo cáo</a>
+        </nav>
+        <div class="user-menu">
+            <a href="/profile" class="user-profile-link">
+                <img src="<%= avatarPath(user.avatar || 'default-1.svg') %>" alt="Avatar" class="header-avatar">
+                <span class="user-name"><%= user.fullName %></span>
+            </a>
+            <a href="/auth/logout" class="btn btn-secondary">Đăng xuất</a>
+        </div>
+    </div>
+</header>

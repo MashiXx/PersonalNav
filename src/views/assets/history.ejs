@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <h1 class="page-title">Lịch sử giá - <%= asset.name %></h1>
+
+        <div class="asset-info">
+            <p><strong>Giá trị hiện tại:</strong> <%= formatCurrency(asset.currentValue) %></p>
+            <p><strong>Số lượng:</strong> <%= asset.quantity %></p>
+        </div>
+
+        <% if (priceHistory.length > 0) { %>
+        <!-- Price Chart -->
+        <div class="dash-card" style="margin-bottom: 2rem;">
+            <div class="dash-card__header">
+                <h2>Biểu đồ giá trị</h2>
+            </div>
+            <div style="position: relative; height: 350px;">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+        <% } %>
+
+        <h2>Lịch sử thay đổi giá</h2>
+
+        <% if (priceHistory.length === 0) { %>
+            <p class="empty-state">Chưa có lịch sử giá nào</p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Giá trị</th>
+                        <th>Số lượng</th>
+                        <th>Ghi chú</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% priceHistory.forEach(history => { %>
+                        <tr>
+                            <td><%= formatDate(history.recordedAt) %></td>
+                            <td><%= formatCurrency(history.value) %></td>
+                            <td><%= history.quantity %></td>
+                            <td><%= history.note || '-' %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+
+        <div class="form-actions">
+            <a href="/assets" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    <% if (priceHistory.length > 0) { %>
+    <script>
+        var priceData = <%- JSON.stringify(chartData) %>;
+
+        var labels = priceData.map(function(h) {
+            return new Date(h.date).toLocaleDateString('vi-VN');
+        });
+        var values = priceData.map(function(h) { return h.value; });
+
+        new Chart(document.getElementById('priceChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Giá trị',
+                    data: values,
+                    borderColor: '#3B82F6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#3B82F6',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(val) {
+                                if (val >= 1e9) return (val / 1e9).toFixed(1) + ' tỷ';
+                                if (val >= 1e6) return (val / 1e6).toFixed(0) + ' tr';
+                                return val.toLocaleString('vi-VN');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+    <% } %>
+
+</body>
+</html>

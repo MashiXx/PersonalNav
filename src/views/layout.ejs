@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <% if (user && user.userId) { %>
+        <%- include('partials/header') %>
+    <% } %>
+
+    <main class="container">
+        <%- include('partials/flash') %>
+        <%- body %>
+    </main>
+
+    <% if (user && user.userId) { %>
+        <%- include('partials/footer') %>
+    <% } %>
+
+    <script src="/js/main.js"></script>
+</body>
+</html>

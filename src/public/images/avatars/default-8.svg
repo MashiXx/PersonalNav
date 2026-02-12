@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Mui (De/Goat) - Turquoise -->
+  <circle cx="64" cy="64" r="60" fill="#1ABC9C"/>
+  <g fill="white" transform="translate(64,64)">
+    <!-- Left horn -->
+    <path d="M -10 -24 Q -18 -42 -24 -38 Q -28 -34 -20 -28 Q -14 -24 -12 -20" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <!-- Right horn -->
+    <path d="M 10 -24 Q 18 -42 24 -38 Q 28 -34 20 -28 Q 14 -24 12 -20" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <!-- Left ear -->
+    <ellipse cx="-22" cy="-14" rx="8" ry="4" transform="rotate(-20 -22 -14)"/>
+    <!-- Right ear -->
+    <ellipse cx="22" cy="-14" rx="8" ry="4" transform="rotate(20 22 -14)"/>
+    <!-- Head -->
+    <ellipse cx="0" cy="-8" rx="20" ry="18"/>
+    <!-- Left eye -->
+    <ellipse cx="-8" cy="-12" rx="3" ry="3.5" fill="#1ABC9C"/>
+    <!-- Right eye -->
+    <ellipse cx="8" cy="-12" rx="3" ry="3.5" fill="#1ABC9C"/>
+    <!-- Horizontal pupils -->
+    <ellipse cx="-8" cy="-12" rx="2.5" ry="1.5" fill="white"/>
+    <ellipse cx="8" cy="-12" rx="2.5" ry="1.5" fill="white"/>
+    <!-- Nose -->
+    <ellipse cx="0" cy="-2" rx="6" ry="4"/>
+    <ellipse cx="0" cy="-2" rx="4.5" ry="3" fill="#1ABC9C"/>
+    <circle cx="-2" cy="-2" r="1" fill="#1ABC9C"/>
+    <circle cx="2" cy="-2" r="1" fill="#1ABC9C"/>
+    <!-- Mouth -->
+    <path d="M -3 3 Q 0 6 3 3" fill="none" stroke="#1ABC9C" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Beard -->
+    <path d="M -2 8 Q -4 18 -2 24 Q 0 28 2 24 Q 4 18 2 8" fill="white"/>
+    <!-- Body -->
+    <ellipse cx="0" cy="24" rx="20" ry="12"/>
+    <!-- Front legs -->
+    <rect x="-14" y="32" width="5" height="14" rx="2" fill="white"/>
+    <rect x="-7" y="32" width="5" height="14" rx="2" fill="white"/>
+    <!-- Back legs -->
+    <rect x="2" y="32" width="5" height="14" rx="2" fill="white"/>
+    <rect x="9" y="32" width="5" height="14" rx="2" fill="white"/>
+  </g>
+</svg>

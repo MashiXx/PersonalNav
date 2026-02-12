@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Mao (Meo/Cat) - Purple -->
+  <circle cx="64" cy="64" r="60" fill="#A78BFA"/>
+  <g fill="white" transform="translate(64,64)">
+    <!-- Left ear -->
+    <polygon points="-24,-22 -18,-42 -6,-24"/>
+    <!-- Right ear -->
+    <polygon points="24,-22 18,-42 6,-24"/>
+    <!-- Inner left ear -->
+    <polygon points="-21,-24 -18,-37 -9,-24" fill="#A78BFA"/>
+    <!-- Inner right ear -->
+    <polygon points="21,-24 18,-37 9,-24" fill="#A78BFA"/>
+    <!-- Head -->
+    <circle cx="0" cy="-6" r="24"/>
+    <!-- Left eye -->
+    <ellipse cx="-9" cy="-10" rx="5" ry="5.5" fill="#A78BFA"/>
+    <!-- Left pupil -->
+    <ellipse cx="-9" cy="-10" rx="2" ry="4.5" fill="white"/>
+    <!-- Right eye -->
+    <ellipse cx="9" cy="-10" rx="5" ry="5.5" fill="#A78BFA"/>
+    <!-- Right pupil -->
+    <ellipse cx="9" cy="-10" rx="2" ry="4.5" fill="white"/>
+    <!-- Nose -->
+    <path d="M -2.5 0 L 0 2.5 L 2.5 0 Z" fill="#A78BFA"/>
+    <!-- Mouth -->
+    <path d="M 0 2.5 Q -4 7 -6 4" fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 0 2.5 Q 4 7 6 4" fill="none" stroke="#A78BFA" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Whiskers left -->
+    <line x1="-28" y1="-4" x2="-14" y2="0" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-28" y1="2" x2="-14" y2="2" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="-28" y1="8" x2="-14" y2="4" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Whiskers right -->
+    <line x1="28" y1="-4" x2="14" y2="0" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="28" y1="2" x2="14" y2="2" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="28" y1="8" x2="14" y2="4" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Body -->
+    <ellipse cx="0" cy="24" rx="18" ry="14"/>
+    <!-- Tail -->
+    <path d="M 16 20 Q 30 18 32 8 Q 34 -2 28 -6" fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <!-- Feet -->
+    <ellipse cx="-8" cy="36" rx="5" ry="3"/>
+    <ellipse cx="8" cy="36" rx="5" ry="3"/>
+  </g>
+</svg>

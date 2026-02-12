@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <div class="page-header">
+            <h1 class="page-title">Quản lý khoản nợ</h1>
+            <a href="/debts/create" class="btn btn-primary">Thêm khoản nợ mới</a>
+        </div>
+
+        <div class="nav-summary">
+            <div class="nav-card">
+                <h3>Tổng nợ đang hoạt động</h3>
+                <p class="nav-value debt"><%= formatCurrency(totalDebt) %></p>
+            </div>
+        </div>
+
+        <% if (debts.length === 0) { %>
+            <p class="empty-state">Không có khoản nợ nào</p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tên</th>
+                        <th>Số tiền</th>
+                        <th>Lãi suất</th>
+                        <th>Hạn thanh toán</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% debts.forEach(debt => { %>
+                        <tr>
+                            <td><%= debt.name %></td>
+                            <td><%= formatCurrency(debt.amount, debt.currency) %></td>
+                            <td><%= debt.interestRate %>%</td>
+                            <td><%= debt.dueDate ? formatDate(debt.dueDate) : '-' %></td>
+                            <td><%= debt.status %></td>
+                            <td>
+                                <a href="/debts/<%= debt.id %>/edit" class="btn btn-sm">Sửa</a>
+                                <form action="/debts/<%= debt.id %>/delete" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

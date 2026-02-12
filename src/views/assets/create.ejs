@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <h1 class="page-title">Thêm tài sản mới</h1>
+
+        <form action="/assets" method="POST" class="form">
+            <div class="form-group">
+                <label for="assetGroupId">Nhóm tài sản *</label>
+                <select id="assetGroupId" name="assetGroupId" required class="form-control">
+                    <option value="">-- Chọn nhóm --</option>
+                    <% assetGroups.forEach(group => { %>
+                        <option value="<%= group.id %>"><%= group.name %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Tên tài sản *</label>
+                <input type="text" id="name" name="name" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô tả</label>
+                <textarea id="description" name="description" rows="4" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="currentValue">Giá trị hiện tại *</label>
+                <input type="number" id="currentValue" name="currentValue" step="0.01" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Số lượng *</label>
+                <input type="number" id="quantity" name="quantity" step="0.01" value="1" required class="form-control">
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Thêm tài sản</button>
+                <a href="/assets" class="btn btn-secondary">Hủy</a>
+            </div>
+        </form>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

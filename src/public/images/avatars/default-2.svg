@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Suu (Trau/Buffalo) - Teal -->
+  <circle cx="64" cy="64" r="60" fill="#4ECDC4"/>
+  <g fill="white" transform="translate(64,64)">
+    <!-- Left horn -->
+    <path d="M -18 -18 Q -34 -36 -30 -14 Q -28 -6 -18 -8" fill="white"/>
+    <!-- Right horn -->
+    <path d="M 18 -18 Q 34 -36 30 -14 Q 28 -6 18 -8" fill="white"/>
+    <!-- Head -->
+    <ellipse cx="0" cy="-4" rx="24" ry="20"/>
+    <!-- Left ear -->
+    <ellipse cx="-24" cy="-10" rx="8" ry="5" transform="rotate(-30 -24 -10)"/>
+    <!-- Right ear -->
+    <ellipse cx="24" cy="-10" rx="8" ry="5" transform="rotate(30 24 -10)"/>
+    <!-- Muzzle -->
+    <ellipse cx="0" cy="8" rx="16" ry="12" fill="#4ECDC4" opacity="0.3"/>
+    <!-- Left eye -->
+    <circle cx="-10" cy="-8" r="3.5" fill="#4ECDC4"/>
+    <!-- Right eye -->
+    <circle cx="10" cy="-8" r="3.5" fill="#4ECDC4"/>
+    <!-- Snout -->
+    <ellipse cx="0" cy="10" rx="10" ry="7"/>
+    <!-- Snout inner -->
+    <ellipse cx="0" cy="10" rx="8" ry="5.5" fill="#4ECDC4"/>
+    <!-- Nostrils -->
+    <ellipse cx="-4" cy="10" rx="2.5" ry="2" fill="#4ECDC4"/>
+    <ellipse cx="4" cy="10" rx="2.5" ry="2" fill="#4ECDC4"/>
+    <!-- Body hint -->
+    <ellipse cx="0" cy="28" rx="20" ry="10"/>
+  </g>
+</svg>

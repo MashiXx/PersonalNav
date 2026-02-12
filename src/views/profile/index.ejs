@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <h1 class="page-title">Thông tin cá nhân</h1>
+
+        <div class="profile-layout">
+            <!-- Avatar Section -->
+            <div class="profile-section">
+                <h2 class="profile-section-title">Ảnh đại diện</h2>
+                <div class="profile-avatar-current">
+                    <img src="<%= avatarPath(profile.avatar || 'default-1.svg') %>" alt="Avatar" class="avatar-large">
+                </div>
+
+                <h3 class="profile-subsection-title">Chọn avatar mặc định</h3>
+                <div class="avatar-grid">
+                    <% defaultAvatars.forEach(function(av) { %>
+                        <form action="/profile/avatar/default" method="POST" class="avatar-form">
+                            <input type="hidden" name="avatar" value="<%= av %>">
+                            <button type="submit" class="avatar-option <%= profile.avatar === av ? 'avatar-active' : '' %>">
+                                <img src="/images/avatars/<%= av %>" alt="Avatar">
+                            </button>
+                        </form>
+                    <% }) %>
+                </div>
+
+                <h3 class="profile-subsection-title">Tải ảnh lên</h3>
+                <form action="/profile/avatar/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+                    <div class="form-group">
+                        <input type="file" name="avatar" accept="image/*" required class="form-control">
+                        <small>Chấp nhận file ảnh, tối đa 5MB. Ảnh sẽ được resize về 128x128px.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Tải lên</button>
+                </form>
+            </div>
+
+            <!-- Profile Info Section -->
+            <div class="profile-section">
+                <h2 class="profile-section-title">Thông tin tài khoản</h2>
+                <form action="/profile/update" method="POST" class="form">
+                    <div class="form-group">
+                        <label for="username">Tên đăng nhập</label>
+                        <input type="text" id="username" value="<%= profile.username %>" class="form-control" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fullName">Họ và tên *</label>
+                        <input type="text" id="fullName" name="fullName" value="<%= profile.fullName %>" required class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" value="<%= profile.email %>" required class="form-control">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        <a href="/dashboard" class="btn btn-secondary">Quay lại</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

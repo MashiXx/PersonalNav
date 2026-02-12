@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Thin (Rong/Dragon) - Gold -->
+  <circle cx="64" cy="64" r="60" fill="#F7DC6F"/>
+  <g fill="white" transform="translate(64,64)">
+    <!-- Left horn -->
+    <path d="M -10 -28 L -18 -44 L -8 -36 L -14 -48 L -4 -34" fill="white"/>
+    <!-- Right horn -->
+    <path d="M 10 -28 L 18 -44 L 8 -36 L 14 -48 L 4 -34" fill="white"/>
+    <!-- Head -->
+    <ellipse cx="0" cy="-16" rx="20" ry="16"/>
+    <!-- Brow ridges -->
+    <ellipse cx="-10" cy="-24" rx="8" ry="4"/>
+    <ellipse cx="10" cy="-24" rx="8" ry="4"/>
+    <!-- Left eye -->
+    <ellipse cx="-8" cy="-20" rx="4" ry="3.5" fill="#F7DC6F"/>
+    <!-- Right eye -->
+    <ellipse cx="8" cy="-20" rx="4" ry="3.5" fill="#F7DC6F"/>
+    <!-- Snout -->
+    <ellipse cx="0" cy="-6" rx="12" ry="8"/>
+    <!-- Nostrils -->
+    <circle cx="-4" cy="-6" r="2" fill="#F7DC6F"/>
+    <circle cx="4" cy="-6" r="2" fill="#F7DC6F"/>
+    <!-- Mouth -->
+    <path d="M -10 -2 Q 0 4 10 -2" fill="none" stroke="#F7DC6F" stroke-width="1.5"/>
+    <!-- Serpentine body -->
+    <path d="M 0 2 Q -20 10 -16 22 Q -12 34 4 28 Q 20 22 18 34 Q 16 44 0 40" fill="none" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Body spines/ridge -->
+    <path d="M -4 4 L -8 0 L -2 8" fill="white"/>
+    <path d="M -16 14 L -22 10 L -16 18" fill="white"/>
+    <path d="M -4 28 L -8 24 L -2 30" fill="white"/>
+    <path d="M 14 26 L 18 20 L 14 30" fill="white"/>
+    <!-- Whisker left -->
+    <path d="M -14 -8 Q -28 -14 -32 -4" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Whisker right -->
+    <path d="M 14 -8 Q 28 -14 32 -4" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

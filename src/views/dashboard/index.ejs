@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <!-- Summary Cards -->
+        <div class="nav-summary">
+            <div class="nav-card nav-card--asset">
+                <div class="nav-card__header">
+                    <span class="nav-card__label">Tổng Tài Sản (Assets)</span>
+                    <span class="nav-card__icon nav-card__icon--green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </span>
+                </div>
+                <p class="nav-card__value"><%= formatCurrency(currentNAV.totalAssets) %></p>
+            </div>
+            <div class="nav-card nav-card--debt">
+                <div class="nav-card__header">
+                    <span class="nav-card__label">Tổng Nợ (Liabilities)</span>
+                    <span class="nav-card__icon nav-card__icon--red">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+                    </span>
+                </div>
+                <p class="nav-card__value"><%= formatCurrency(currentNAV.totalDebts) %></p>
+            </div>
+            <div class="nav-card nav-card--nav">
+                <div class="nav-card__header">
+                    <span class="nav-card__label">Tài Sản Ròng (NAV)</span>
+                    <span class="nav-card__icon nav-card__icon--blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="15" x2="12" y2="15"/></svg>
+                    </span>
+                </div>
+                <p class="nav-card__value nav-card__value--blue"><%= formatCurrency(currentNAV.netAssetValue) %></p>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="dash-row dash-row--2col">
+            <!-- Asset & Debt Allocation -->
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 0 20"/><line x1="12" y1="2" x2="12" y2="12"/><line x1="12" y1="12" x2="21" y2="16"/></svg>
+                    <h2>Phân Bổ Tài Sản & Nợ</h2>
+                </div>
+                <div class="charts-duo">
+                    <div class="chart-col">
+                        <h3 class="chart-subtitle">Cơ cấu Tài sản</h3>
+                        <canvas id="assetDonut"></canvas>
+                    </div>
+                    <div class="chart-col">
+                        <h3 class="chart-subtitle">Cơ cấu Nợ</h3>
+                        <canvas id="debtDonut"></canvas>
+                    </div>
+                </div>
+                <div id="assetLegend" class="chart-legend"></div>
+            </div>
+
+            <!-- NAV History -->
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <h2>Lịch sử NAV (6 tháng gần nhất)</h2>
+                </div>
+                <canvas id="navBarChart" style="max-height: 280px;"></canvas>
+                <div class="dash-card__actions">
+                    <form action="/dashboard/snapshot" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-primary btn-sm">Tạo snapshot NAV</button>
+                    </form>
+                    <a href="/dashboard/reports" class="btn btn-link btn-sm">Xem báo cáo chi tiết &rarr;</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="dash-row dash-row--bottom">
+            <!-- Quick Add -->
+            <div class="dash-card dash-card--quickadd">
+                <h2 class="dash-card__title">Thêm Mục Mới</h2>
+                <div class="tab-toggle">
+                    <button type="button" class="tab-btn tab-btn--active" data-tab="asset">Tài sản</button>
+                    <button type="button" class="tab-btn" data-tab="debt">Khoản nợ</button>
+                </div>
+
+                <!-- Asset Form -->
+                <form id="tab-asset" action="/assets" method="POST" class="quickadd-form">
+                    <input type="hidden" name="quantity" value="1">
+                    <input type="hidden" name="description" value="">
+                    <div class="form-group">
+                        <label>Loại danh mục</label>
+                        <select name="assetGroupId" required class="form-control">
+                            <% assetGroups.forEach(function(g) { %>
+                                <option value="<%= g.id %>"><%= g.name %> (<%= g.currency %>)</option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên khoản mục</label>
+                        <input type="text" name="name" placeholder="Ví dụ: Chung cư Masteri..." required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Giá trị</label>
+                        <input type="number" name="currentValue" value="0" step="1" required class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">+ Thêm Tài Sản</button>
+                </form>
+
+                <!-- Debt Form -->
+                <form id="tab-debt" action="/debts" method="POST" class="quickadd-form" style="display: none;">
+                    <input type="hidden" name="interestRate" value="0">
+                    <input type="hidden" name="status" value="active">
+                    <input type="hidden" name="dueDate" value="">
+                    <div class="form-group">
+                        <label>Tên khoản nợ</label>
+                        <input type="text" name="name" placeholder="Ví dụ: Vay mua nhà..." required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả</label>
+                        <input type="text" name="description" placeholder="Ví dụ: Vay thế chấp..." class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Số tiền</label>
+                        <input type="number" name="amount" value="0" step="1" required class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Tiền tệ</label>
+                        <select name="currency" required class="form-control">
+                            <% currencies.forEach(function(c) { %>
+                                <option value="<%= c.code %>"><%= c.code %> (<%= c.symbol %>)</option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">+ Thêm Khoản Nợ</button>
+                </form>
+            </div>
+
+            <!-- Asset & Debt Lists -->
+            <div class="dash-lists">
+                <!-- Asset List -->
+                <div class="dash-card">
+                    <div class="dash-card__header">
+                        <div class="dash-card__header-left">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                            <h2>Danh sách Tài sản</h2>
+                        </div>
+                        <span class="dash-card__total dash-card__total--green"><%= formatCurrency(currentNAV.totalAssets) %></span>
+                    </div>
+                    <% if (recentAssets.length === 0) { %>
+                        <p class="empty-state">Chưa có tài sản nào. <a href="/assets/create">Thêm ngay</a></p>
+                    <% } else { %>
+                        <div class="item-list">
+                            <% recentAssets.forEach(function(asset) { %>
+                                <div class="item-row">
+                                    <div class="item-row__icon">
+                                        <img src="/images/icons/<%= asset.assetGroup ? (asset.assetGroup.icon || 'other.svg') : 'other.svg' %>" alt="">
+                                    </div>
+                                    <div class="item-row__info">
+                                        <span class="item-row__name"><%= asset.name %></span>
+                                        <span class="item-row__sub"><%= asset.assetGroup ? asset.assetGroup.name : '' %></span>
+                                    </div>
+                                    <span class="item-row__value"><%= formatCurrency(asset.currentValue, asset.currency) %></span>
+                                </div>
+                            <% }) %>
+                        </div>
+                        <a href="/assets" class="btn btn-link btn-sm">Xem tất cả &rarr;</a>
+                    <% } %>
+                </div>
+
+                <!-- Debt List -->
+                <div class="dash-card">
+                    <div class="dash-card__header">
+                        <div class="dash-card__header-left">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c3e50" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                            <h2>Danh sách Nợ</h2>
+                        </div>
+                        <span class="dash-card__total dash-card__total--red"><%= formatCurrency(currentNAV.totalDebts) %></span>
+                    </div>
+                    <% if (recentDebts.length === 0) { %>
+                        <p class="empty-state">Không có khoản nợ nào</p>
+                    <% } else { %>
+                        <div class="item-list">
+                            <% recentDebts.forEach(function(debt) { %>
+                                <div class="item-row">
+                                    <div class="item-row__icon item-row__icon--debt">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                                    </div>
+                                    <div class="item-row__info">
+                                        <span class="item-row__name"><%= debt.name %></span>
+                                        <span class="item-row__sub"><%= debt.description || debt.status %></span>
+                                    </div>
+                                    <span class="item-row__value item-row__value--red"><%= formatCurrency(debt.amount, debt.currency) %></span>
+                                </div>
+                            <% }) %>
+                        </div>
+                        <a href="/debts" class="btn btn-link btn-sm">Xem tất cả &rarr;</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+        // Tab toggle
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('tab-btn--active'); });
+                btn.classList.add('tab-btn--active');
+                var tab = btn.getAttribute('data-tab');
+                document.getElementById('tab-asset').style.display = tab === 'asset' ? 'block' : 'none';
+                document.getElementById('tab-debt').style.display = tab === 'debt' ? 'block' : 'none';
+            });
+        });
+
+        // Chart colors
+        var chartColors = ['#3B82F6', '#F59E0B', '#EF4444', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
+
+        // Asset Donut
+        var assetGroups = <%- JSON.stringify(currentNAV.breakdown.assetGroups) %>;
+        var assetLabels = assetGroups.map(function(g) { return g.name; });
+        var assetValues = assetGroups.map(function(g) { return g.totalValue; });
+
+        new Chart(document.getElementById('assetDonut'), {
+            type: 'doughnut',
+            data: {
+                labels: assetLabels,
+                datasets: [{
+                    data: assetValues,
+                    backgroundColor: chartColors.slice(0, assetLabels.length),
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                cutout: '65%',
+                plugins: {
+                    legend: { display: false }
+                },
+                responsive: true,
+                maintainAspectRatio: true
+            }
+        });
+
+        // Build legend
+        var legendEl = document.getElementById('assetLegend');
+        assetLabels.forEach(function(label, i) {
+            var dot = document.createElement('span');
+            dot.className = 'legend-item';
+            dot.innerHTML = '<span class="legend-dot" style="background:' + chartColors[i] + '"></span>' + label;
+            legendEl.appendChild(dot);
+        });
+
+        // Debt Donut
+        var debts = <%- JSON.stringify(recentDebts) %>;
+        var debtLabels = debts.map(function(d) { return d.name; });
+        var debtValues = debts.map(function(d) { return Number(d.amount); });
+
+        if (debtValues.length > 0) {
+            new Chart(document.getElementById('debtDonut'), {
+                type: 'doughnut',
+                data: {
+                    labels: debtLabels,
+                    datasets: [{
+                        data: debtValues,
+                        backgroundColor: ['#EF4444', '#F97316', '#F59E0B', '#EC4899', '#8B5CF6'].slice(0, debtLabels.length),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '65%',
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+        }
+
+        // NAV Bar Chart (last 6 snapshots)
+        var snapshots = <%- JSON.stringify(recentSnapshots.slice(0, 6).reverse()) %>;
+        var monthNames = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'];
+        var barLabels = snapshots.map(function(s) {
+            var d = new Date(s.snapshotDate);
+            return monthNames[d.getMonth()];
+        });
+        var barValues = snapshots.map(function(s) { return s.netAssetValue; });
+
+        // Add current if we have room
+        if (barLabels.length === 0) {
+            barLabels = ['Hiện tại'];
+            barValues = [<%= currentNAV.netAssetValue %>];
+        }
+
+        new Chart(document.getElementById('navBarChart'), {
+            type: 'bar',
+            data: {
+                labels: barLabels,
+                datasets: [{
+                    label: 'NAV',
+                    data: barValues,
+                    backgroundColor: '#3B82F6',
+                    borderRadius: 4,
+                    barPercentage: 0.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(val) {
+                                if (val >= 1e9) return (val / 1e9).toFixed(1) + ' tỷ';
+                                if (val >= 1e6) return (val / 1e6).toFixed(0) + ' tr';
+                                return val;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

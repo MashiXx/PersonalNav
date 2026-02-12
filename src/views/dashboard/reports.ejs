@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <h1 class="page-title">Báo cáo thống kê</h1>
+
+        <div class="nav-summary">
+            <div class="nav-card">
+                <h3>NAV hiện tại</h3>
+                <p class="nav-value"><%= formatCurrency(currentNAV.netAssetValue) %></p>
+            </div>
+        </div>
+
+        <div class="reports-section">
+            <h2>Lịch sử NAV theo tháng (<%= selectedYear %>)</h2>
+            <canvas id="monthlyChart"></canvas>
+        </div>
+
+        <div class="reports-section">
+            <h2>Lịch sử NAV theo năm (5 năm gần nhất)</h2>
+            <canvas id="yearlyChart"></canvas>
+        </div>
+
+        <div class="reports-section">
+            <h2>Phân bổ tài sản theo nhóm</h2>
+            <canvas id="assetGroupChart"></canvas>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    <script>
+        // Monthly NAV Chart
+        const monthlyData = <%- JSON.stringify(monthlySnapshots) %>;
+        const monthlyLabels = monthlyData.map(s => new Date(s.snapshotDate).toLocaleDateString('vi-VN'));
+        const monthlyValues = monthlyData.map(s => s.netAssetValue);
+
+        new Chart(document.getElementById('monthlyChart'), {
+            type: 'line',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: 'NAV theo tháng',
+                    data: monthlyValues,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            }
+        });
+
+        // Yearly NAV Chart
+        const yearlyData = <%- JSON.stringify(yearlySnapshots) %>;
+        const yearlyLabels = yearlyData.map(s => new Date(s.snapshotDate).getFullYear());
+        const yearlyValues = yearlyData.map(s => s.netAssetValue);
+
+        new Chart(document.getElementById('yearlyChart'), {
+            type: 'bar',
+            data: {
+                labels: yearlyLabels,
+                datasets: [{
+                    label: 'NAV theo năm',
+                    data: yearlyValues,
+                    backgroundColor: 'rgb(54, 162, 235)'
+                }]
+            }
+        });
+
+        // Asset Group Pie Chart
+        const breakdown = <%- JSON.stringify(currentNAV.breakdown) %>;
+        const groupLabels = breakdown.assetGroups.map(g => g.name);
+        const groupValues = breakdown.assetGroups.map(g => g.totalValue);
+
+        new Chart(document.getElementById('assetGroupChart'), {
+            type: 'pie',
+            data: {
+                labels: groupLabels,
+                datasets: [{
+                    data: groupValues,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)'
+                    ]
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

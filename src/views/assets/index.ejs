@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <div class="page-header">
+            <h1 class="page-title">Quản lý tài sản</h1>
+            <a href="/assets/create" class="btn btn-primary">Thêm tài sản mới</a>
+        </div>
+
+        <% if (assets.length === 0) { %>
+            <p class="empty-state">Chưa có tài sản nào. <a href="/assets/create">Thêm ngay</a></p>
+        <% } else { %>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tên</th>
+                        <th>Nhóm</th>
+                        <th>Giá trị</th>
+                        <th>Số lượng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% assets.forEach(asset => { %>
+                        <tr>
+                            <td><%= asset.name %></td>
+                            <td><%= asset.assetGroup.name %></td>
+                            <td><%= formatCurrency(asset.currentValue, asset.currency) %></td>
+                            <td><%= asset.quantity %></td>
+                            <td>
+                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm">Lịch sử</a>
+                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm">Sửa</a>
+                                <form action="/assets/<%= asset.id %>/delete" method="POST" style="display: inline;">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Hoi (Lon/Pig) - Pink -->
+  <circle cx="64" cy="64" r="60" fill="#F1948A"/>
+  <g fill="white" transform="translate(64,64)">
+    <!-- Left ear -->
+    <path d="M -14 -24 Q -24 -40 -30 -30 Q -34 -22 -22 -18" fill="white"/>
+    <!-- Right ear -->
+    <path d="M 14 -24 Q 24 -40 30 -30 Q 34 -22 22 -18" fill="white"/>
+    <!-- Inner left ear -->
+    <path d="M -16 -24 Q -24 -36 -28 -28 Q -30 -24 -22 -20" fill="#F1948A" opacity="0.4"/>
+    <!-- Inner right ear -->
+    <path d="M 16 -24 Q 24 -36 28 -28 Q 30 -24 22 -20" fill="#F1948A" opacity="0.4"/>
+    <!-- Head -->
+    <circle cx="0" cy="-6" r="24"/>
+    <!-- Left eye -->
+    <circle cx="-10" cy="-10" r="3.5" fill="#F1948A"/>
+    <!-- Left pupil -->
+    <circle cx="-9" cy="-9.5" r="1.5" fill="white"/>
+    <!-- Right eye -->
+    <circle cx="10" cy="-10" r="3.5" fill="#F1948A"/>
+    <!-- Right pupil -->
+    <circle cx="9" cy="-9.5" r="1.5" fill="white"/>
+    <!-- Snout -->
+    <ellipse cx="0" cy="4" rx="14" ry="10"/>
+    <!-- Snout inner -->
+    <ellipse cx="0" cy="4" rx="12" ry="8" fill="#F1948A" opacity="0.25"/>
+    <!-- Nostrils -->
+    <ellipse cx="-4" cy="4" rx="3" ry="2.5" fill="#F1948A"/>
+    <ellipse cx="4" cy="4" rx="3" ry="2.5" fill="#F1948A"/>
+    <!-- Mouth -->
+    <path d="M -5 10 Q 0 14 5 10" fill="none" stroke="#F1948A" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Cheeks -->
+    <circle cx="-16" cy="0" r="4" fill="#F1948A" opacity="0.15"/>
+    <circle cx="16" cy="0" r="4" fill="#F1948A" opacity="0.15"/>
+    <!-- Body -->
+    <ellipse cx="0" cy="28" rx="22" ry="14"/>
+    <!-- Front legs -->
+    <rect x="-14" y="38" width="7" height="10" rx="3" fill="white"/>
+    <rect x="-5" y="38" width="7" height="10" rx="3" fill="white"/>
+    <!-- Back legs -->
+    <rect x="-2" y="38" width="7" height="10" rx="3" fill="white"/>
+    <rect x="7" y="38" width="7" height="10" rx="3" fill="white"/>
+    <!-- Hooves -->
+    <rect x="-14" y="46" width="7" height="3" rx="1" fill="#F1948A" opacity="0.3"/>
+    <rect x="-5" y="46" width="7" height="3" rx="1" fill="#F1948A" opacity="0.3"/>
+    <rect x="-2" y="46" width="7" height="3" rx="1" fill="#F1948A" opacity="0.3"/>
+    <rect x="7" y="46" width="7" height="3" rx="1" fill="#F1948A" opacity="0.3"/>
+    <!-- Curly tail -->
+    <path d="M 18 22 Q 26 18 28 22 Q 30 26 26 28 Q 22 30 24 26" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

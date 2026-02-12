@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <h1 class="page-title">Chỉnh sửa nhóm tài sản</h1>
+
+        <form action="/asset-groups/<%= group.id %>" method="POST" class="form">
+            <div class="form-group">
+                <label for="name">Tên nhóm *</label>
+                <input type="text" id="name" name="name" value="<%= group.name %>" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="type">Loại *</label>
+                <select id="type" name="type" required class="form-control">
+                    <option value="real_estate" <%= group.type === 'real_estate' ? 'selected' : '' %>>Bất động sản</option>
+                    <option value="savings" <%= group.type === 'savings' ? 'selected' : '' %>>Sổ tiết kiệm</option>
+                    <option value="stocks" <%= group.type === 'stocks' ? 'selected' : '' %>>Cổ phiếu</option>
+                    <option value="crypto" <%= group.type === 'crypto' ? 'selected' : '' %>>Tiền điện tử</option>
+                    <option value="other" <%= group.type === 'other' ? 'selected' : '' %>>Khác</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="currency">Đơn vị tiền tệ *</label>
+                <select id="currency" name="currency" required class="form-control">
+                    <% currencies.forEach(function(c) { %>
+                        <option value="<%= c.code %>" <%= group.currency === c.code ? 'selected' : '' %>><%= c.code %> (<%= c.symbol %>)</option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Icon</label>
+                <div class="icon-grid">
+                    <% defaultIcons.forEach(function(ic) { %>
+                        <label class="icon-option">
+                            <input type="radio" name="icon" value="<%= ic.file %>" <%= group.icon === ic.file ? 'checked' : '' %>>
+                            <span class="icon-option-inner">
+                                <img src="/images/icons/<%= ic.file %>" alt="<%= ic.label %>">
+                                <span class="icon-label"><%= ic.label %></span>
+                            </span>
+                        </label>
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Mô tả</label>
+                <textarea id="description" name="description" rows="4" class="form-control"><%= group.description || '' %></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <a href="/asset-groups" class="btn btn-secondary">Hủy</a>
+            </div>
+        </form>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

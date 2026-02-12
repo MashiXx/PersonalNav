@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Personal NAV</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <main class="container">
+        <%- include('../partials/flash') %>
+
+        <!-- Group Header -->
+        <div class="detail-header">
+            <div class="detail-header__left">
+                <img src="/images/icons/<%= group.icon || 'other.svg' %>" alt="" class="detail-header__icon">
+                <div>
+                    <h1 class="detail-header__title"><%= group.name %></h1>
+                    <span class="detail-header__sub"><%= group.type %> · <%= group.currency %></span>
+                </div>
+            </div>
+            <div class="detail-header__right">
+                <div class="detail-header__value"><%= formatCurrency(totalValue) %></div>
+                <span class="detail-header__label"><%= group.assets.length %> tài sản</span>
+            </div>
+        </div>
+
+        <% if (group.assets.length > 0) { %>
+        <!-- Charts Row -->
+        <div class="dash-row dash-row--2col">
+            <!-- Asset Allocation Donut -->
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <h2>Phân bổ tài sản trong nhóm</h2>
+                </div>
+                <div style="max-width: 300px; margin: 0 auto;">
+                    <canvas id="groupDonut"></canvas>
+                </div>
+                <div id="groupLegend" class="chart-legend" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- Group Value History -->
+            <div class="dash-card">
+                <div class="dash-card__header">
+                    <h2>Biến động giá trị nhóm</h2>
+                </div>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="groupHistory"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asset Table -->
+        <div class="dash-card">
+            <div class="dash-card__header">
+                <h2>Danh sách tài sản</h2>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Tên</th>
+                        <th>Giá trị</th>
+                        <th>Số lượng</th>
+                        <th>Tỷ trọng</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% group.assets.forEach(function(asset) { %>
+                        <tr>
+                            <td><%= asset.name %></td>
+                            <td><%= formatCurrency(asset.currentValue, asset.currency) %></td>
+                            <td><%= asset.quantity %></td>
+                            <td><%= totalValue > 0 ? (convertToVND(Number(asset.currentValue), asset.currency) / totalValue * 100).toFixed(1) : 0 %>%</td>
+                            <td>
+                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm">Biểu đồ</a>
+                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm">Sửa</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% } else { %>
+            <p class="empty-state">Nhóm này chưa có tài sản nào. <a href="/assets/create">Thêm ngay</a></p>
+        <% } %>
+
+        <div class="form-actions">
+            <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-primary">Chỉnh sửa nhóm</a>
+            <a href="/asset-groups" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+    <% if (group.assets.length > 0) { %>
+    <script>
+        var chartColors = ['#3B82F6', '#F59E0B', '#EF4444', '#10B981', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316'];
+        var assets = <%- JSON.stringify(assetsChartData) %>;
+
+        // Donut chart - asset allocation
+        var donutLabels = assets.map(function(a) { return a.name; });
+        var donutValues = assets.map(function(a) { return a.value; });
+
+        new Chart(document.getElementById('groupDonut'), {
+            type: 'doughnut',
+            data: {
+                labels: donutLabels,
+                datasets: [{
+                    data: donutValues,
+                    backgroundColor: chartColors.slice(0, donutLabels.length),
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                cutout: '65%',
+                plugins: { legend: { display: false } },
+                responsive: true,
+                maintainAspectRatio: true
+            }
+        });
+
+        // Build legend
+        var legendEl = document.getElementById('groupLegend');
+        donutLabels.forEach(function(label, i) {
+            var dot = document.createElement('span');
+            dot.className = 'legend-item';
+            dot.innerHTML = '<span class="legend-dot" style="background:' + chartColors[i % chartColors.length] + '"></span>' + label;
+            legendEl.appendChild(dot);
+        });
+
+        // History chart - aggregate all price histories by date
+        var allPoints = [];
+        assets.forEach(function(asset, idx) {
+            asset.priceHistory.forEach(function(ph) {
+                allPoints.push({ date: ph.date, value: ph.value, asset: asset.name, idx: idx });
+            });
+        });
+
+        // Sort by date
+        allPoints.sort(function(a, b) { return new Date(a.date).getTime() - new Date(b.date).getTime(); });
+
+        // Build datasets per asset for stacked area
+        if (allPoints.length > 0) {
+            // Get unique dates
+            var dates = [];
+            var dateSet = {};
+            allPoints.forEach(function(p) {
+                var d = new Date(p.date).toLocaleDateString('vi-VN');
+                if (!dateSet[d]) { dateSet[d] = true; dates.push(d); }
+            });
+
+            // Build per-asset value at each date (forward fill)
+            var datasets = assets.map(function(asset, idx) {
+                var lastVal = 0;
+                var values = dates.map(function(d) {
+                    var point = allPoints.find(function(p) {
+                        return p.idx === idx && new Date(p.date).toLocaleDateString('vi-VN') === d;
+                    });
+                    if (point) lastVal = point.value;
+                    return lastVal;
+                });
+                return {
+                    label: asset.name,
+                    data: values,
+                    backgroundColor: chartColors[idx % chartColors.length] + '33',
+                    borderColor: chartColors[idx % chartColors.length],
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3
+                };
+            });
+
+            new Chart(document.getElementById('groupHistory'), {
+                type: 'line',
+                data: { labels: dates, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: {
+                        x: { ticks: { maxTicksToShow: 10 } },
+                        y: {
+                            beginAtZero: true,
+                            stacked: true,
+                            ticks: {
+                                callback: function(val) {
+                                    if (val >= 1e9) return (val / 1e9).toFixed(1) + ' tỷ';
+                                    if (val >= 1e6) return (val / 1e6).toFixed(0) + ' tr';
+                                    return val;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!-- Than (Khi/Monkey) - Dark Orange -->
+  <circle cx="64" cy="64" r="60" fill="#E67E22"/>
+  <g fill="white" transform="translate(64,64)">
+    <!-- Left ear outer -->
+    <circle cx="-26" cy="-10" r="10"/>
+    <!-- Left ear inner -->
+    <circle cx="-26" cy="-10" r="6" fill="#E67E22"/>
+    <!-- Right ear outer -->
+    <circle cx="26" cy="-10" r="10"/>
+    <!-- Right ear inner -->
+    <circle cx="26" cy="-10" r="6" fill="#E67E22"/>
+    <!-- Head -->
+    <circle cx="0" cy="-8" r="24"/>
+    <!-- Face area (lighter) -->
+    <ellipse cx="0" cy="-2" rx="16" ry="14"/>
+    <!-- Face inner -->
+    <ellipse cx="0" cy="-2" rx="14" ry="12" fill="#E67E22" opacity="0.2"/>
+    <!-- Left eye -->
+    <ellipse cx="-8" cy="-8" rx="4.5" ry="5" fill="#E67E22"/>
+    <!-- Left pupil -->
+    <circle cx="-7" cy="-7" r="2" fill="white"/>
+    <!-- Right eye -->
+    <ellipse cx="8" cy="-8" rx="4.5" ry="5" fill="#E67E22"/>
+    <!-- Right pupil -->
+    <circle cx="7" cy="-7" r="2" fill="white"/>
+    <!-- Nose -->
+    <ellipse cx="0" cy="0" rx="4" ry="2.5" fill="#E67E22"/>
+    <!-- Mouth -->
+    <path d="M -6 5 Q 0 10 6 5" fill="none" stroke="#E67E22" stroke-width="2" stroke-linecap="round"/>
+    <!-- Body -->
+    <ellipse cx="0" cy="22" rx="18" ry="14"/>
+    <!-- Belly -->
+    <ellipse cx="0" cy="24" rx="12" ry="10" fill="#E67E22" opacity="0.2"/>
+    <!-- Left arm -->
+    <path d="M -18 18 Q -30 22 -28 32 Q -26 38 -22 36" fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>
+    <!-- Right arm -->
+    <path d="M 18 18 Q 30 22 28 32 Q 26 38 22 36" fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>
+    <!-- Feet -->
+    <ellipse cx="-8" cy="36" rx="6" ry="3"/>
+    <ellipse cx="8" cy="36" rx="6" ry="3"/>
+    <!-- Tail -->
+    <path d="M 14 32 Q 28 28 30 16 Q 32 8 28 4" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+  </g>
+</svg>
