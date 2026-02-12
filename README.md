@@ -4,6 +4,8 @@
 
 A comprehensive personal asset management system for tracking assets, debts, and calculating Net Asset Value (NAV).
 
+![Dashboard](images/dashboard.png)
+
 ## Features
 
 - **Authentication** — Secure login/registration with Remember Me (up to 30 days)
@@ -19,6 +21,9 @@ A comprehensive personal asset management system for tracking assets, debts, and
 - **Reports & Charts** — Monthly/yearly NAV charts, asset allocation donuts, debt breakdowns
 - **NAV Snapshots** — Save point-in-time NAV states to track trends over time
 - **User Profile** — Default or custom avatar, personal info management
+- **Multi-language** — English (default) and Vietnamese, switchable in profile settings
+
+![Profile](images/profile.png)
 
 ## Tech Stack
 
@@ -158,7 +163,6 @@ All totals (dashboard, NAV, reports) are converted to VND as the reporting curre
 - `POST /assets/:id` — Update asset
 - `POST /assets/:id/delete` — Delete asset
 - `GET /assets/:id/history` — Price history
-
 ### Debts
 - `GET /debts` — List debts
 - `GET /debts/create` — Create form
