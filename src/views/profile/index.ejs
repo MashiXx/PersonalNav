@@ -1,85 +1,91 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
+                <h1 class="page-title"><%= t('profile.title') %></h1>
 
-        <h1 class="page-title"><%= t('profile.title') %></h1>
+                <div class="profile-layout">
+                    <!-- Avatar Section -->
+                    <div class="profile-section">
+                        <h2 class="profile-section-title"><%= t('profile.avatar') %></h2>
+                        <div class="profile-avatar-current">
+                            <img src="<%= avatarPath(profile.avatar || 'default-1.svg') %>" alt="Avatar" class="avatar-large">
+                        </div>
 
-        <div class="profile-layout">
-            <!-- Avatar Section -->
-            <div class="profile-section">
-                <h2 class="profile-section-title"><%= t('profile.avatar') %></h2>
-                <div class="profile-avatar-current">
-                    <img src="<%= avatarPath(profile.avatar || 'default-1.svg') %>" alt="Avatar" class="avatar-large">
-                </div>
+                        <h3 class="profile-subsection-title"><%= t('profile.selectDefaultAvatar') %></h3>
+                        <div class="avatar-grid">
+                            <% defaultAvatars.forEach(function(av) { %>
+                                <form action="/profile/avatar/default" method="POST" class="avatar-form">
+                                    <input type="hidden" name="avatar" value="<%= av %>">
+                                    <button type="submit" class="avatar-option <%= profile.avatar === av ? 'avatar-active' : '' %>">
+                                        <img src="/images/avatars/<%= av %>" alt="Avatar">
+                                    </button>
+                                </form>
+                            <% }) %>
+                        </div>
 
-                <h3 class="profile-subsection-title"><%= t('profile.selectDefaultAvatar') %></h3>
-                <div class="avatar-grid">
-                    <% defaultAvatars.forEach(function(av) { %>
-                        <form action="/profile/avatar/default" method="POST" class="avatar-form">
-                            <input type="hidden" name="avatar" value="<%= av %>">
-                            <button type="submit" class="avatar-option <%= profile.avatar === av ? 'avatar-active' : '' %>">
-                                <img src="/images/avatars/<%= av %>" alt="Avatar">
-                            </button>
+                        <h3 class="profile-subsection-title"><%= t('profile.uploadPhoto') %></h3>
+                        <form action="/profile/avatar/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+                            <div class="form-group">
+                                <input type="file" name="avatar" accept="image/*" required class="form-control">
+                                <small><%= t('profile.uploadHint') %></small>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm"><%= t('profile.upload') %></button>
                         </form>
-                    <% }) %>
+                    </div>
+
+                    <!-- Profile Info Section -->
+                    <div class="profile-section">
+                        <h2 class="profile-section-title"><%= t('profile.accountInfo') %></h2>
+                        <form action="/profile/update" method="POST" class="form">
+                            <div class="form-group">
+                                <label for="username"><%= t('auth.username') %></label>
+                                <input type="text" id="username" value="<%= profile.username %>" class="form-control" disabled>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fullName"><%= t('profile.fullNameRequired') %></label>
+                                <input type="text" id="fullName" name="fullName" value="<%= profile.fullName %>" required class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email"><%= t('profile.emailRequired') %></label>
+                                <input type="email" id="email" name="email" value="<%= profile.email %>" required class="form-control">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary"><%= t('common.update') %></button>
+                                <a href="/dashboard" class="btn btn-secondary"><%= t('common.back') %></a>
+                            </div>
+                        </form>
+
+                        <h2 class="profile-section-title" style="margin-top: 2rem;"><%= t('profile.language') %></h2>
+                        <div class="lang-switcher-profile">
+                            <% locales.forEach(function(l) { %>
+                                <a href="/lang/<%= l.code %>" class="btn <%= locale === l.code ? 'btn-primary' : 'btn-secondary' %> btn-sm"><%= l.name %></a>
+                            <% }) %>
+                        </div>
+                    </div>
                 </div>
-
-                <h3 class="profile-subsection-title"><%= t('profile.uploadPhoto') %></h3>
-                <form action="/profile/avatar/upload" method="POST" enctype="multipart/form-data" class="upload-form">
-                    <div class="form-group">
-                        <input type="file" name="avatar" accept="image/*" required class="form-control">
-                        <small><%= t('profile.uploadHint') %></small>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-sm"><%= t('profile.upload') %></button>
-                </form>
-            </div>
-
-            <!-- Profile Info Section -->
-            <div class="profile-section">
-                <h2 class="profile-section-title"><%= t('profile.accountInfo') %></h2>
-                <form action="/profile/update" method="POST" class="form">
-                    <div class="form-group">
-                        <label for="username"><%= t('auth.username') %></label>
-                        <input type="text" id="username" value="<%= profile.username %>" class="form-control" disabled>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fullName"><%= t('profile.fullNameRequired') %></label>
-                        <input type="text" id="fullName" name="fullName" value="<%= profile.fullName %>" required class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email"><%= t('profile.emailRequired') %></label>
-                        <input type="email" id="email" name="email" value="<%= profile.email %>" required class="form-control">
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary"><%= t('common.update') %></button>
-                        <a href="/dashboard" class="btn btn-secondary"><%= t('common.back') %></a>
-                    </div>
-                </form>
-
-                <h2 class="profile-section-title" style="margin-top: 2rem;"><%= t('profile.language') %></h2>
-                <div class="lang-switcher-profile">
-                    <% locales.forEach(function(l) { %>
-                        <a href="/lang/<%= l.code %>" class="btn <%= locale === l.code ? 'btn-primary' : 'btn-secondary' %> btn-sm"><%= l.name %></a>
-                    <% }) %>
-                </div>
-            </div>
+            </main>
+            <%- include('../partials/footer') %>
         </div>
-    </main>
-
-    <%- include('../partials/footer') %>
+    </div>
 </body>
 </html>

@@ -1,65 +1,71 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
+                <div class="page-header">
+                    <h1 class="page-title"><%= t('debts.title') %></h1>
+                    <a href="/debts/create" class="btn btn-primary"><%= t('debts.addNew') %></a>
+                </div>
 
-        <div class="page-header">
-            <h1 class="page-title"><%= t('debts.title') %></h1>
-            <a href="/debts/create" class="btn btn-primary"><%= t('debts.addNew') %></a>
+                <div class="nav-summary">
+                    <div class="nav-card">
+                        <h3><%= t('debts.totalActiveDebt') %></h3>
+                        <p class="nav-value debt"><%= formatCurrency(totalDebt) %></p>
+                    </div>
+                </div>
+
+                <% if (debts.length === 0) { %>
+                    <p class="empty-state"><%= t('debts.emptyState') %></p>
+                <% } else { %>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><%= t('common.name') %></th>
+                                <th><%= t('debts.amount') %></th>
+                                <th><%= t('debts.interestRate') %></th>
+                                <th><%= t('debts.dueDate') %></th>
+                                <th><%= t('debts.status') %></th>
+                                <th><%= t('common.actions') %></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% debts.forEach(debt => { %>
+                                <tr>
+                                    <td><%= debt.name %></td>
+                                    <td><%= formatCurrency(debt.amount, debt.currency) %></td>
+                                    <td><%= debt.interestRate %>%</td>
+                                    <td><%= debt.dueDate ? formatDate(debt.dueDate) : '-' %></td>
+                                    <td><%= debt.status %></td>
+                                    <td>
+                                        <a href="/debts/<%= debt.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
+                                        <form action="/debts/<%= debt.id %>/delete" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('<%= t('common.confirmDelete') %>')"><%= t('common.delete') %></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </main>
+            <%- include('../partials/footer') %>
         </div>
-
-        <div class="nav-summary">
-            <div class="nav-card">
-                <h3><%= t('debts.totalActiveDebt') %></h3>
-                <p class="nav-value debt"><%= formatCurrency(totalDebt) %></p>
-            </div>
-        </div>
-
-        <% if (debts.length === 0) { %>
-            <p class="empty-state"><%= t('debts.emptyState') %></p>
-        <% } else { %>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th><%= t('common.name') %></th>
-                        <th><%= t('debts.amount') %></th>
-                        <th><%= t('debts.interestRate') %></th>
-                        <th><%= t('debts.dueDate') %></th>
-                        <th><%= t('debts.status') %></th>
-                        <th><%= t('common.actions') %></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% debts.forEach(debt => { %>
-                        <tr>
-                            <td><%= debt.name %></td>
-                            <td><%= formatCurrency(debt.amount, debt.currency) %></td>
-                            <td><%= debt.interestRate %>%</td>
-                            <td><%= debt.dueDate ? formatDate(debt.dueDate) : '-' %></td>
-                            <td><%= debt.status %></td>
-                            <td>
-                                <a href="/debts/<%= debt.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
-                                <form action="/debts/<%= debt.id %>/delete" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('<%= t('common.confirmDelete') %>')"><%= t('common.delete') %></button>
-                                </form>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        <% } %>
-    </main>
-
-    <%- include('../partials/footer') %>
+    </div>
 </body>
 </html>

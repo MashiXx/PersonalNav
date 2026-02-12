@@ -1,70 +1,76 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
+                <h1 class="page-title"><%= t('assets.addNew') %></h1>
 
-        <h1 class="page-title"><%= t('assets.addNew') %></h1>
+                <form action="/assets" method="POST" class="form">
+                    <div class="form-group">
+                        <label for="assetGroupId"><%= t('assets.assetGroupRequired') %></label>
+                        <select id="assetGroupId" name="assetGroupId" required class="form-control">
+                            <option value=""><%= t('assets.selectGroup') %></option>
+                            <% assetGroups.forEach(group => { %>
+                                <option value="<%= group.id %>" data-type="<%= group.type %>"><%= group.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
 
-        <form action="/assets" method="POST" class="form">
-            <div class="form-group">
-                <label for="assetGroupId"><%= t('assets.assetGroupRequired') %></label>
-                <select id="assetGroupId" name="assetGroupId" required class="form-control">
-                    <option value=""><%= t('assets.selectGroup') %></option>
-                    <% assetGroups.forEach(group => { %>
-                        <option value="<%= group.id %>" data-type="<%= group.type %>"><%= group.name %></option>
-                    <% }) %>
-                </select>
-            </div>
+                    <div class="form-group">
+                        <label for="name"><%= t('assets.assetNameRequired') %></label>
+                        <input type="text" id="name" name="name" required class="form-control">
+                    </div>
 
-            <div class="form-group">
-                <label for="name"><%= t('assets.assetNameRequired') %></label>
-                <input type="text" id="name" name="name" required class="form-control">
-            </div>
+                    <div class="form-group">
+                        <label for="description"><%= t('common.description') %></label>
+                        <textarea id="description" name="description" rows="4" class="form-control"></textarea>
+                    </div>
 
-            <div class="form-group">
-                <label for="description"><%= t('common.description') %></label>
-                <textarea id="description" name="description" rows="4" class="form-control"></textarea>
-            </div>
+                    <div class="form-group">
+                        <label for="currentValue"><%= t('assets.currentValueRequired') %></label>
+                        <input type="number" id="currentValue" name="currentValue" step="0.01" required class="form-control">
+                    </div>
 
-            <div class="form-group">
-                <label for="currentValue"><%= t('assets.currentValueRequired') %></label>
-                <input type="number" id="currentValue" name="currentValue" step="0.01" required class="form-control">
-            </div>
+                    <div class="form-group">
+                        <label for="quantity"><%= t('assets.quantityRequired') %></label>
+                        <input type="number" id="quantity" name="quantity" step="0.01" value="1" required class="form-control">
+                    </div>
 
-            <div class="form-group">
-                <label for="quantity"><%= t('assets.quantityRequired') %></label>
-                <input type="number" id="quantity" name="quantity" step="0.01" value="1" required class="form-control">
-            </div>
+                    <div class="form-group" id="tokenSelectGroup" style="display: none;">
+                        <label for="coinGeckoId"><%= t('assets.selectToken') %></label>
+                        <select id="coinGeckoId" name="coinGeckoId" class="form-control">
+                            <option value=""><%= t('assets.selectTokenPlaceholder') %></option>
+                            <% cryptoTokens.forEach(token => { %>
+                                <option value="<%= token.id %>"><%= token.symbol %> - <%= token.name %></option>
+                            <% }) %>
+                        </select>
+                        <small class="form-text"><%= t('assets.tokenHint') %></small>
+                    </div>
 
-            <div class="form-group" id="tokenSelectGroup" style="display: none;">
-                <label for="coinGeckoId"><%= t('assets.selectToken') %></label>
-                <select id="coinGeckoId" name="coinGeckoId" class="form-control">
-                    <option value=""><%= t('assets.selectTokenPlaceholder') %></option>
-                    <% cryptoTokens.forEach(token => { %>
-                        <option value="<%= token.id %>"><%= token.symbol %> - <%= token.name %></option>
-                    <% }) %>
-                </select>
-                <small class="form-text"><%= t('assets.tokenHint') %></small>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary"><%= t('assets.addAsset') %></button>
-                <a href="/assets" class="btn btn-secondary"><%= t('common.cancel') %></a>
-            </div>
-        </form>
-    </main>
-
-    <%- include('../partials/footer') %>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><%= t('assets.addAsset') %></button>
+                        <a href="/assets" class="btn btn-secondary"><%= t('common.cancel') %></a>
+                    </div>
+                </form>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

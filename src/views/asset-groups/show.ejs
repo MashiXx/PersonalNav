@@ -1,101 +1,107 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
-
-        <!-- Group Header -->
-        <div class="detail-header">
-            <div class="detail-header__left">
-                <img src="/images/icons/<%= group.icon || 'other.svg' %>" alt="" class="detail-header__icon">
-                <div>
-                    <h1 class="detail-header__title"><%= group.name %></h1>
-                    <span class="detail-header__sub"><%= group.type %> · <%= group.currency %></span>
+                <!-- Group Header -->
+                <div class="detail-header">
+                    <div class="detail-header__left">
+                        <img src="/images/icons/<%= group.icon || 'other.svg' %>" alt="" class="detail-header__icon">
+                        <div>
+                            <h1 class="detail-header__title"><%= group.name %></h1>
+                            <span class="detail-header__sub"><%= group.type %> · <%= group.currency %></span>
+                        </div>
+                    </div>
+                    <div class="detail-header__right">
+                        <div class="detail-header__value"><%= formatCurrency(totalValue) %></div>
+                        <span class="detail-header__label"><%= group.assets.length %> <%= t('assetGroups.assetsSuffix') %></span>
+                    </div>
                 </div>
-            </div>
-            <div class="detail-header__right">
-                <div class="detail-header__value"><%= formatCurrency(totalValue) %></div>
-                <span class="detail-header__label"><%= group.assets.length %> <%= t('assetGroups.assetsSuffix') %></span>
-            </div>
+
+                <% if (group.assets.length > 0) { %>
+                <!-- Charts Row -->
+                <div class="dash-row dash-row--2col">
+                    <!-- Asset Allocation Donut -->
+                    <div class="dash-card">
+                        <div class="dash-card__header">
+                            <h2><%= t('assetGroups.allocationInGroup') %></h2>
+                        </div>
+                        <div style="max-width: 300px; margin: 0 auto;">
+                            <canvas id="groupDonut"></canvas>
+                        </div>
+                        <div id="groupLegend" class="chart-legend" style="margin-top: 1rem;"></div>
+                    </div>
+
+                    <!-- Group Value History -->
+                    <div class="dash-card">
+                        <div class="dash-card__header">
+                            <h2><%= t('assetGroups.groupValueChange') %></h2>
+                        </div>
+                        <div style="position: relative; height: 300px;">
+                            <canvas id="groupHistory"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asset Table -->
+                <div class="dash-card">
+                    <div class="dash-card__header">
+                        <h2><%= t('assetGroups.assetList') %></h2>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><%= t('common.name') %></th>
+                                <th><%= t('common.value') %></th>
+                                <th><%= t('common.quantity') %></th>
+                                <th><%= t('assetGroups.proportion') %></th>
+                                <th><%= t('common.actions') %></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% group.assets.forEach(function(asset) { %>
+                                <tr>
+                                    <td><%= asset.name %></td>
+                                    <td><%= formatCurrency(asset.currentValue, asset.currency) %></td>
+                                    <td><%= asset.quantity %></td>
+                                    <td><%= totalValue > 0 ? (convertToVND(Number(asset.currentValue), asset.currency) / totalValue * 100).toFixed(1) : 0 %>%</td>
+                                    <td>
+                                        <a href="/assets/<%= asset.id %>/history" class="btn btn-sm"><%= t('common.chart') %></a>
+                                        <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                <% } else { %>
+                    <p class="empty-state"><%= t('assetGroups.emptyGroupState') %> <a href="/assets/create"><%= t('common.addNow') %></a></p>
+                <% } %>
+
+                <div class="form-actions">
+                    <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-primary"><%= t('assetGroups.editGroup') %></a>
+                    <a href="/asset-groups" class="btn btn-secondary"><%= t('common.back') %></a>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
         </div>
-
-        <% if (group.assets.length > 0) { %>
-        <!-- Charts Row -->
-        <div class="dash-row dash-row--2col">
-            <!-- Asset Allocation Donut -->
-            <div class="dash-card">
-                <div class="dash-card__header">
-                    <h2><%= t('assetGroups.allocationInGroup') %></h2>
-                </div>
-                <div style="max-width: 300px; margin: 0 auto;">
-                    <canvas id="groupDonut"></canvas>
-                </div>
-                <div id="groupLegend" class="chart-legend" style="margin-top: 1rem;"></div>
-            </div>
-
-            <!-- Group Value History -->
-            <div class="dash-card">
-                <div class="dash-card__header">
-                    <h2><%= t('assetGroups.groupValueChange') %></h2>
-                </div>
-                <div style="position: relative; height: 300px;">
-                    <canvas id="groupHistory"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Asset Table -->
-        <div class="dash-card">
-            <div class="dash-card__header">
-                <h2><%= t('assetGroups.assetList') %></h2>
-            </div>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th><%= t('common.name') %></th>
-                        <th><%= t('common.value') %></th>
-                        <th><%= t('common.quantity') %></th>
-                        <th><%= t('assetGroups.proportion') %></th>
-                        <th><%= t('common.actions') %></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% group.assets.forEach(function(asset) { %>
-                        <tr>
-                            <td><%= asset.name %></td>
-                            <td><%= formatCurrency(asset.currentValue, asset.currency) %></td>
-                            <td><%= asset.quantity %></td>
-                            <td><%= totalValue > 0 ? (convertToVND(Number(asset.currentValue), asset.currency) / totalValue * 100).toFixed(1) : 0 %>%</td>
-                            <td>
-                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm"><%= t('common.chart') %></a>
-                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
-        <% } else { %>
-            <p class="empty-state"><%= t('assetGroups.emptyGroupState') %> <a href="/assets/create"><%= t('common.addNow') %></a></p>
-        <% } %>
-
-        <div class="form-actions">
-            <a href="/asset-groups/<%= group.id %>/edit" class="btn btn-primary"><%= t('assetGroups.editGroup') %></a>
-            <a href="/asset-groups" class="btn btn-secondary"><%= t('common.back') %></a>
-        </div>
-    </main>
-
-    <%- include('../partials/footer') %>
+    </div>
 
     <% if (group.assets.length > 0) { %>
     <script>

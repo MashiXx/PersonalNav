@@ -1,62 +1,68 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
+                <div class="page-header">
+                    <h1 class="page-title"><%= t('assets.title') %></h1>
+                    <div class="page-actions">
+                        <form action="/assets/refresh-all-prices" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-secondary"><%= t('assets.refreshAllPrices') %></button>
+                        </form>
+                        <a href="/assets/create" class="btn btn-primary"><%= t('assets.addNew') %></a>
+                    </div>
+                </div>
 
-        <div class="page-header">
-            <h1 class="page-title"><%= t('assets.title') %></h1>
-            <div class="page-actions">
-                <form action="/assets/refresh-all-prices" method="POST" style="display: inline;">
-                    <button type="submit" class="btn btn-secondary"><%= t('assets.refreshAllPrices') %></button>
-                </form>
-                <a href="/assets/create" class="btn btn-primary"><%= t('assets.addNew') %></a>
-            </div>
+                <% if (assets.length === 0) { %>
+                    <p class="empty-state"><%= t('assets.emptyState') %> <a href="/assets/create"><%= t('common.addNow') %></a></p>
+                <% } else { %>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><%= t('common.name') %></th>
+                                <th><%= t('assets.group') %></th>
+                                <th><%= t('common.value') %></th>
+                                <th><%= t('common.quantity') %></th>
+                                <th><%= t('common.actions') %></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% assets.forEach(asset => { %>
+                                <tr>
+                                    <td><%= asset.name %></td>
+                                    <td><%= asset.assetGroup.name %></td>
+                                    <td><%= formatCurrency(asset.currentValue, asset.currency) %></td>
+                                    <td><%= asset.quantity %></td>
+                                    <td>
+                                        <a href="/assets/<%= asset.id %>/history" class="btn btn-sm"><%= t('common.history') %></a>
+                                        <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
+                                        <form action="/assets/<%= asset.id %>/delete" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('<%= t('common.confirmDelete') %>')"><%= t('common.delete') %></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </main>
+            <%- include('../partials/footer') %>
         </div>
-
-        <% if (assets.length === 0) { %>
-            <p class="empty-state"><%= t('assets.emptyState') %> <a href="/assets/create"><%= t('common.addNow') %></a></p>
-        <% } else { %>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th><%= t('common.name') %></th>
-                        <th><%= t('assets.group') %></th>
-                        <th><%= t('common.value') %></th>
-                        <th><%= t('common.quantity') %></th>
-                        <th><%= t('common.actions') %></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% assets.forEach(asset => { %>
-                        <tr>
-                            <td><%= asset.name %></td>
-                            <td><%= asset.assetGroup.name %></td>
-                            <td><%= formatCurrency(asset.currentValue, asset.currency) %></td>
-                            <td><%= asset.quantity %></td>
-                            <td>
-                                <a href="/assets/<%= asset.id %>/history" class="btn btn-sm"><%= t('common.history') %></a>
-                                <a href="/assets/<%= asset.id %>/edit" class="btn btn-sm"><%= t('common.edit') %></a>
-                                <form action="/assets/<%= asset.id %>/delete" method="POST" style="display: inline;">
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('<%= t('common.confirmDelete') %>')"><%= t('common.delete') %></button>
-                                </form>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        <% } %>
-    </main>
-
-    <%- include('../partials/footer') %>
+    </div>
 </body>
 </html>

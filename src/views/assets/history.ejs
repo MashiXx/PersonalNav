@@ -1,76 +1,82 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
+                <h1 class="page-title"><%= t('assets.priceHistory') %> - <%= asset.name %></h1>
 
-        <h1 class="page-title"><%= t('assets.priceHistory') %> - <%= asset.name %></h1>
+                <div class="asset-info">
+                    <p><strong><%= t('assets.currentValue') %></strong> <%= formatCurrency(asset.currentValue) %></p>
+                    <p><strong><%= t('assets.quantityLabel') %></strong> <%= asset.quantity %></p>
+                </div>
 
-        <div class="asset-info">
-            <p><strong><%= t('assets.currentValue') %></strong> <%= formatCurrency(asset.currentValue) %></p>
-            <p><strong><%= t('assets.quantityLabel') %></strong> <%= asset.quantity %></p>
+                <% if (priceHistory.length > 0) { %>
+                <!-- Price Chart -->
+                <div class="dash-card" style="margin-bottom: 2rem;">
+                    <div class="dash-card__header">
+                        <h2><%= t('assets.valueChart') %></h2>
+                    </div>
+                    <div style="position: relative; height: 350px;">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+                <% } %>
+
+                <h2><%= t('assets.priceChangeHistory') %></h2>
+
+                <% if (priceHistory.length === 0) { %>
+                    <p class="empty-state"><%= t('assets.noPriceHistory') %></p>
+                <% } else { %>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th><%= t('common.date') %></th>
+                                <th><%= t('common.value') %></th>
+                                <th><%= t('common.quantity') %></th>
+                                <th><%= t('common.note') %></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% priceHistory.forEach(history => { %>
+                                <tr>
+                                    <td><%= formatDate(history.recordedAt) %></td>
+                                    <td><%= formatCurrency(history.value) %></td>
+                                    <td><%= history.quantity %></td>
+                                    <td><%= history.note || '-' %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+
+                <div class="form-actions">
+                    <% if (isCryptoAsset) { %>
+                        <form action="/assets/<%= asset.id %>/refresh-price" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-primary"><%= t('assets.refreshPrice') %></button>
+                        </form>
+                    <% } %>
+                    <a href="/assets" class="btn btn-secondary"><%= t('common.back') %></a>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
         </div>
-
-        <% if (priceHistory.length > 0) { %>
-        <!-- Price Chart -->
-        <div class="dash-card" style="margin-bottom: 2rem;">
-            <div class="dash-card__header">
-                <h2><%= t('assets.valueChart') %></h2>
-            </div>
-            <div style="position: relative; height: 350px;">
-                <canvas id="priceChart"></canvas>
-            </div>
-        </div>
-        <% } %>
-
-        <h2><%= t('assets.priceChangeHistory') %></h2>
-
-        <% if (priceHistory.length === 0) { %>
-            <p class="empty-state"><%= t('assets.noPriceHistory') %></p>
-        <% } else { %>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th><%= t('common.date') %></th>
-                        <th><%= t('common.value') %></th>
-                        <th><%= t('common.quantity') %></th>
-                        <th><%= t('common.note') %></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% priceHistory.forEach(history => { %>
-                        <tr>
-                            <td><%= formatDate(history.recordedAt) %></td>
-                            <td><%= formatCurrency(history.value) %></td>
-                            <td><%= history.quantity %></td>
-                            <td><%= history.note || '-' %></td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        <% } %>
-
-        <div class="form-actions">
-            <% if (isCryptoAsset) { %>
-                <form action="/assets/<%= asset.id %>/refresh-price" method="POST" style="display: inline;">
-                    <button type="submit" class="btn btn-primary"><%= t('assets.refreshPrice') %></button>
-                </form>
-            <% } %>
-            <a href="/assets" class="btn btn-secondary"><%= t('common.back') %></a>
-        </div>
-    </main>
-
-    <%- include('../partials/footer') %>
+    </div>
 
     <% if (priceHistory.length > 0) { %>
     <script>
@@ -89,12 +95,12 @@
                 datasets: [{
                     label: '<%= t("common.value") %>',
                     data: values,
-                    borderColor: '#3B82F6',
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.3,
-                    pointBackgroundColor: '#3B82F6',
+                    pointBackgroundColor: '#6366f1',
                     pointRadius: 4
                 }]
             },

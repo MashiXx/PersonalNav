@@ -1,27 +1,39 @@
 <!DOCTYPE html>
-<html lang="<%= typeof locale !== 'undefined' ? locale : 'vi' %>">
+<html lang="<%= typeof locale !== 'undefined' ? locale : 'vi' %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/main.js"></script>
 </head>
 <body>
     <% if (user && user.userId) { %>
+    <div class="app-layout">
         <%- include('partials/header') %>
-    <% } %>
-
-    <main class="container">
+        <div class="main-content">
+            <main class="container">
+                <div class="error-page">
+                    <h1><%= title %></h1>
+                    <p><%= message %></p>
+                    <a href="/dashboard" class="btn btn-primary"><%= typeof t !== 'undefined' ? t('common.back') : 'Back' %></a>
+                </div>
+            </main>
+            <%- include('partials/footer') %>
+        </div>
+    </div>
+    <% } else { %>
+    <main class="container" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
         <div class="error-page">
             <h1><%= title %></h1>
             <p><%= message %></p>
-            <a href="<%= user && user.userId ? '/dashboard' : '/auth/login' %>" class="btn btn-primary"><%= typeof t !== 'undefined' ? t('common.back') : 'Quay lại' %></a>
+            <a href="/auth/login" class="btn btn-primary"><%= typeof t !== 'undefined' ? t('common.back') : 'Back' %></a>
         </div>
     </main>
-
-    <% if (user && user.userId) { %>
-        <%- include('partials/footer') %>
     <% } %>
 </body>
 </html>

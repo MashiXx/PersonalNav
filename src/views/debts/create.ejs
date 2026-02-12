@@ -1,71 +1,77 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
+                <h1 class="page-title"><%= t('debts.addNew') %></h1>
 
-        <h1 class="page-title"><%= t('debts.addNew') %></h1>
+                <form action="/debts" method="POST" class="form">
+                    <div class="form-group">
+                        <label for="name"><%= t('debts.debtNameRequired') %></label>
+                        <input type="text" id="name" name="name" required class="form-control">
+                    </div>
 
-        <form action="/debts" method="POST" class="form">
-            <div class="form-group">
-                <label for="name"><%= t('debts.debtNameRequired') %></label>
-                <input type="text" id="name" name="name" required class="form-control">
-            </div>
+                    <div class="form-group">
+                        <label for="description"><%= t('common.description') %></label>
+                        <textarea id="description" name="description" rows="4" class="form-control"></textarea>
+                    </div>
 
-            <div class="form-group">
-                <label for="description"><%= t('common.description') %></label>
-                <textarea id="description" name="description" rows="4" class="form-control"></textarea>
-            </div>
+                    <div class="form-group">
+                        <label for="amount"><%= t('debts.amountRequired') %></label>
+                        <input type="number" id="amount" name="amount" step="0.01" required class="form-control">
+                    </div>
 
-            <div class="form-group">
-                <label for="amount"><%= t('debts.amountRequired') %></label>
-                <input type="number" id="amount" name="amount" step="0.01" required class="form-control">
-            </div>
+                    <div class="form-group">
+                        <label for="interestRate"><%= t('debts.interestRateLabel') %></label>
+                        <input type="number" id="interestRate" name="interestRate" step="0.01" value="0" class="form-control">
+                    </div>
 
-            <div class="form-group">
-                <label for="interestRate"><%= t('debts.interestRateLabel') %></label>
-                <input type="number" id="interestRate" name="interestRate" step="0.01" value="0" class="form-control">
-            </div>
+                    <div class="form-group">
+                        <label for="currency"><%= t('common.currencyUnit') %></label>
+                        <select id="currency" name="currency" required class="form-control">
+                            <% currencies.forEach(function(c) { %>
+                                <option value="<%= c.code %>"><%= c.code %> (<%= c.symbol %>)</option>
+                            <% }) %>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label for="currency"><%= t('common.currencyUnit') %></label>
-                <select id="currency" name="currency" required class="form-control">
-                    <% currencies.forEach(function(c) { %>
-                        <option value="<%= c.code %>"><%= c.code %> (<%= c.symbol %>)</option>
-                    <% }) %>
-                </select>
-            </div>
+                    <div class="form-group">
+                        <label for="dueDate"><%= t('debts.dueDate') %></label>
+                        <input type="date" id="dueDate" name="dueDate" class="form-control">
+                    </div>
 
-            <div class="form-group">
-                <label for="dueDate"><%= t('debts.dueDate') %></label>
-                <input type="date" id="dueDate" name="dueDate" class="form-control">
-            </div>
+                    <div class="form-group">
+                        <label for="status"><%= t('debts.statusRequired') %></label>
+                        <select id="status" name="status" required class="form-control">
+                            <option value="active"><%= t('debts.statusActive') %></option>
+                            <option value="paid_off"><%= t('debts.statusPaidOff') %></option>
+                            <option value="overdue"><%= t('debts.statusOverdue') %></option>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label for="status"><%= t('debts.statusRequired') %></label>
-                <select id="status" name="status" required class="form-control">
-                    <option value="active"><%= t('debts.statusActive') %></option>
-                    <option value="paid_off"><%= t('debts.statusPaidOff') %></option>
-                    <option value="overdue"><%= t('debts.statusOverdue') %></option>
-                </select>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary"><%= t('debts.addDebt') %></button>
-                <a href="/debts" class="btn btn-secondary"><%= t('common.cancel') %></a>
-            </div>
-        </form>
-    </main>
-
-    <%- include('../partials/footer') %>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><%= t('debts.addDebt') %></button>
+                        <a href="/debts" class="btn btn-secondary"><%= t('common.cancel') %></a>
+                    </div>
+                </form>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
 </body>
 </html>

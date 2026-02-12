@@ -1,75 +1,81 @@
 <!DOCTYPE html>
-<html lang="<%= locale %>">
+<html lang="<%= locale %>" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %> - Personal NAV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <script src="/js/main.js"></script>
 </head>
 <body>
-    <%- include('../partials/header') %>
+    <div class="app-layout">
+        <%- include('../partials/header') %>
+        <div class="main-content">
+            <main class="container">
+                <%- include('../partials/flash') %>
 
-    <main class="container">
-        <%- include('../partials/flash') %>
+                <h1 class="page-title"><%= t('assetGroups.editTitle') %></h1>
 
-        <h1 class="page-title"><%= t('assetGroups.editTitle') %></h1>
+                <form action="/asset-groups/<%= group.id %>" method="POST" class="form">
+                    <div class="form-group">
+                        <label for="name"><%= t('assetGroups.groupNameRequired') %></label>
+                        <input type="text" id="name" name="name" value="<%= group.name %>" required class="form-control">
+                    </div>
 
-        <form action="/asset-groups/<%= group.id %>" method="POST" class="form">
-            <div class="form-group">
-                <label for="name"><%= t('assetGroups.groupNameRequired') %></label>
-                <input type="text" id="name" name="name" value="<%= group.name %>" required class="form-control">
-            </div>
+                    <div class="form-group">
+                        <label for="type"><%= t('assetGroups.typeRequired') %></label>
+                        <select id="type" name="type" required class="form-control">
+                            <option value="real_estate" <%= group.type === 'real_estate' ? 'selected' : '' %>><%= t('assetGroups.typeRealEstate') %></option>
+                            <option value="savings" <%= group.type === 'savings' ? 'selected' : '' %>><%= t('assetGroups.typeSavings') %></option>
+                            <option value="stocks" <%= group.type === 'stocks' ? 'selected' : '' %>><%= t('assetGroups.typeStocks') %></option>
+                            <option value="crypto" <%= group.type === 'crypto' ? 'selected' : '' %>><%= t('assetGroups.typeCrypto') %></option>
+                            <option value="other" <%= group.type === 'other' ? 'selected' : '' %>><%= t('assetGroups.typeOther') %></option>
+                        </select>
+                    </div>
 
-            <div class="form-group">
-                <label for="type"><%= t('assetGroups.typeRequired') %></label>
-                <select id="type" name="type" required class="form-control">
-                    <option value="real_estate" <%= group.type === 'real_estate' ? 'selected' : '' %>><%= t('assetGroups.typeRealEstate') %></option>
-                    <option value="savings" <%= group.type === 'savings' ? 'selected' : '' %>><%= t('assetGroups.typeSavings') %></option>
-                    <option value="stocks" <%= group.type === 'stocks' ? 'selected' : '' %>><%= t('assetGroups.typeStocks') %></option>
-                    <option value="crypto" <%= group.type === 'crypto' ? 'selected' : '' %>><%= t('assetGroups.typeCrypto') %></option>
-                    <option value="other" <%= group.type === 'other' ? 'selected' : '' %>><%= t('assetGroups.typeOther') %></option>
-                </select>
-            </div>
+                    <div class="form-group" id="currencyGroup">
+                        <label for="currency"><%= t('common.currencyUnit') %></label>
+                        <select id="currency" name="currency" required class="form-control">
+                            <% currencies.forEach(function(c) { %>
+                                <option value="<%= c.code %>" <%= group.currency === c.code ? 'selected' : '' %>><%= c.code %> (<%= c.symbol %>)</option>
+                            <% }) %>
+                        </select>
+                        <small id="cryptoCurrencyHint" class="form-text" style="display: none;"><%= t('assetGroups.cryptoUsdOnly') %></small>
+                    </div>
 
-            <div class="form-group" id="currencyGroup">
-                <label for="currency"><%= t('common.currencyUnit') %></label>
-                <select id="currency" name="currency" required class="form-control">
-                    <% currencies.forEach(function(c) { %>
-                        <option value="<%= c.code %>" <%= group.currency === c.code ? 'selected' : '' %>><%= c.code %> (<%= c.symbol %>)</option>
-                    <% }) %>
-                </select>
-                <small id="cryptoCurrencyHint" class="form-text" style="display: none;"><%= t('assetGroups.cryptoUsdOnly') %></small>
-            </div>
+                    <div class="form-group">
+                        <label><%= t('common.icon') %></label>
+                        <div class="icon-grid">
+                            <% defaultIcons.forEach(function(ic) { %>
+                                <label class="icon-option">
+                                    <input type="radio" name="icon" value="<%= ic.file %>" <%= group.icon === ic.file ? 'checked' : '' %>>
+                                    <span class="icon-option-inner">
+                                        <img src="/images/icons/<%= ic.file %>" alt="<%= t(ic.label) %>">
+                                        <span class="icon-label"><%= t(ic.label) %></span>
+                                    </span>
+                                </label>
+                            <% }) %>
+                        </div>
+                    </div>
 
-            <div class="form-group">
-                <label><%= t('common.icon') %></label>
-                <div class="icon-grid">
-                    <% defaultIcons.forEach(function(ic) { %>
-                        <label class="icon-option">
-                            <input type="radio" name="icon" value="<%= ic.file %>" <%= group.icon === ic.file ? 'checked' : '' %>>
-                            <span class="icon-option-inner">
-                                <img src="/images/icons/<%= ic.file %>" alt="<%= t(ic.label) %>">
-                                <span class="icon-label"><%= t(ic.label) %></span>
-                            </span>
-                        </label>
-                    <% }) %>
-                </div>
-            </div>
+                    <div class="form-group">
+                        <label for="description"><%= t('common.description') %></label>
+                        <textarea id="description" name="description" rows="4" class="form-control"><%= group.description || '' %></textarea>
+                    </div>
 
-            <div class="form-group">
-                <label for="description"><%= t('common.description') %></label>
-                <textarea id="description" name="description" rows="4" class="form-control"><%= group.description || '' %></textarea>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary"><%= t('common.update') %></button>
-                <a href="/asset-groups" class="btn btn-secondary"><%= t('common.cancel') %></a>
-            </div>
-        </form>
-    </main>
-
-    <%- include('../partials/footer') %>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><%= t('common.update') %></button>
+                        <a href="/asset-groups" class="btn btn-secondary"><%= t('common.cancel') %></a>
+                    </div>
+                </form>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
