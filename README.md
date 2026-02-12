@@ -8,6 +8,9 @@ A comprehensive personal asset management system for tracking assets, debts, and
 
 ## Features
 
+- **Dark/Light Theme** — Professional dark theme by default with light mode toggle, preference persisted via localStorage
+- **Sidebar Navigation** — Fixed sidebar with icon-based nav links, collapsible on mobile with hamburger menu and overlay
+- **Glassmorphism UI** — Cards with backdrop blur, subtle borders, and entrance animations
 - **Authentication** — Secure login/registration with Remember Me (up to 30 days)
 - **Asset Group Management** — Organize assets by category (real estate, savings, stocks, crypto, etc.)
   - Data protection: groups with existing assets cannot be deleted
@@ -18,10 +21,11 @@ A comprehensive personal asset management system for tracking assets, debts, and
 - **Debt Management** — Track debts with interest rates and due dates
 - **Multi-Currency** — VND and USD support with configurable exchange rates. Reporting currency is VND
 - **NAV Calculation** — Automatic net asset value computation (all currencies converted to VND)
-- **Reports & Charts** — Monthly/yearly NAV charts, asset allocation donuts, debt breakdowns
+- **Reports & Charts** — Monthly/yearly NAV charts, asset allocation donuts, debt breakdowns (Chart.js with theme-aware colors)
 - **NAV Snapshots** — Save point-in-time NAV states to track trends over time
 - **User Profile** — Default or custom avatar, personal info management
-- **Multi-language** — English (default) and Vietnamese, switchable in profile settings
+- **Multi-language** — English (default) and Vietnamese, switchable via sidebar or profile settings
+- **Responsive Design** — Mobile-first with topbar, off-canvas sidebar, and adaptive grid layouts
 
 ![Profile](images/profile.png)
 
@@ -31,7 +35,7 @@ A comprehensive personal asset management system for tracking assets, debts, and
 |-------|-----------|
 | Runtime | Node.js + TypeScript |
 | Web Framework | Express |
-| Views | EJS (Server-side rendering) |
+| Views | EJS (Server-side rendering) with Inter font |
 | Database | SQLite via TypeORM |
 | Auth | bcryptjs + express-session |
 | Charts | Chart.js |
@@ -108,7 +112,7 @@ src/
 │   ├── assets/            # CRUD + price history
 │   ├── debts/             # CRUD
 │   └── profile/           # User profile
-├── public/                # Static assets (CSS, JS, images)
+├── public/                # Static assets (CSS with dark/light theming, JS, images)
 └── index.ts               # Entry point
 ```
 
@@ -187,12 +191,12 @@ This entire project was built through conversational AI development — a workfl
 - Architecture design (MVC + Service Layer)
 - Database schema and TypeORM entities
 - All controllers, services, and routes
-- EJS views with responsive CSS
-- Chart.js dashboard visualizations
+- EJS views with sidebar layout, dark/light theming, glassmorphism CSS
+- Chart.js dashboard visualizations with theme-aware colors
 - Multi-currency conversion system
 - Authentication and session management
 
-The Vietnamese UI, the favicon, the CSS layout fixes — all done through conversation. The `CLAUDE.md` file in the repo serves as persistent context for the AI across sessions.
+The Vietnamese UI, the favicon, the CSS layout fixes, and the dark-mode dashboard pro redesign — all done through conversation. The `CLAUDE.md` file in the repo serves as persistent context for the AI across sessions.
 
 ## License
 
