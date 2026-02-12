@@ -12,6 +12,8 @@
     <%- include('../partials/header') %>
 
     <main class="container">
+        <%- include('../partials/flash') %>
+
         <h1 class="page-title"><%= t('assets.priceHistory') %> - <%= asset.name %></h1>
 
         <div class="asset-info">
@@ -59,6 +61,11 @@
         <% } %>
 
         <div class="form-actions">
+            <% if (isCryptoAsset) { %>
+                <form action="/assets/<%= asset.id %>/refresh-price" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-primary"><%= t('assets.refreshPrice') %></button>
+                </form>
+            <% } %>
             <a href="/assets" class="btn btn-secondary"><%= t('common.back') %></a>
         </div>
     </main>

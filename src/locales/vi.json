@@ -100,6 +100,7 @@
   "assetGroups.proportion": "Tỷ trọng",
   "assetGroups.emptyGroupState": "Nhóm này chưa có tài sản nào.",
   "assetGroups.editGroup": "Chỉnh sửa nhóm",
+  "assetGroups.cryptoUsdOnly": "Nhóm tiền điện tử bắt buộc sử dụng USD",
 
   "assets.title": "Quản lý tài sản",
   "assets.addNew": "Thêm tài sản mới",
@@ -120,6 +121,12 @@
   "assets.noPriceHistory": "Chưa có lịch sử giá nào",
   "assets.initialValue": "Giá trị khởi tạo",
   "assets.valueUpdated": "Cập nhật giá trị",
+  "assets.selectToken": "Token Crypto",
+  "assets.selectTokenPlaceholder": "-- Chọn token --",
+  "assets.tokenHint": "Chọn token để bật cập nhật giá tự động từ CoinGecko",
+  "assets.refreshPrice": "Cập nhật giá",
+  "assets.refreshAllPrices": "Cập nhật giá Crypto",
+  "assets.priceRefreshed": "Cập nhật giá từ CoinGecko",
 
   "debts.title": "Quản lý khoản nợ",
   "debts.addNew": "Thêm khoản nợ mới",
@@ -207,6 +214,10 @@
   "flash.avatarProcessError": "Không thể xử lý ảnh avatar",
   "flash.duplicateUser": "Tên đăng nhập hoặc email đã tồn tại",
   "flash.imageOnly": "Chỉ chấp nhận file ảnh!",
+  "flash.priceRefreshSuccess": "Cập nhật giá thành công",
+  "flash.priceRefreshError": "Không thể cập nhật giá. Vui lòng thử lại sau.",
+  "flash.allPricesRefreshSuccess": "Đã cập nhật giá cho {count} tài sản crypto",
+  "flash.noCryptoAssets": "Không tìm thấy tài sản crypto có token",
 
   "chart.billion": "tỷ",
   "chart.million": "tr"

@@ -15,7 +15,12 @@
 
         <div class="page-header">
             <h1 class="page-title"><%= t('assets.title') %></h1>
-            <a href="/assets/create" class="btn btn-primary"><%= t('assets.addNew') %></a>
+            <div class="page-actions">
+                <form action="/assets/refresh-all-prices" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary"><%= t('assets.refreshAllPrices') %></button>
+                </form>
+                <a href="/assets/create" class="btn btn-primary"><%= t('assets.addNew') %></a>
+            </div>
         </div>
 
         <% if (assets.length === 0) { %>

@@ -21,7 +21,7 @@
                 <select id="assetGroupId" name="assetGroupId" required class="form-control">
                     <option value=""><%= t('assets.selectGroup') %></option>
                     <% assetGroups.forEach(group => { %>
-                        <option value="<%= group.id %>"><%= group.name %></option>
+                        <option value="<%= group.id %>" data-type="<%= group.type %>"><%= group.name %></option>
                     <% }) %>
                 </select>
             </div>
@@ -46,6 +46,17 @@
                 <input type="number" id="quantity" name="quantity" step="0.01" value="1" required class="form-control">
             </div>
 
+            <div class="form-group" id="tokenSelectGroup" style="display: none;">
+                <label for="coinGeckoId"><%= t('assets.selectToken') %></label>
+                <select id="coinGeckoId" name="coinGeckoId" class="form-control">
+                    <option value=""><%= t('assets.selectTokenPlaceholder') %></option>
+                    <% cryptoTokens.forEach(token => { %>
+                        <option value="<%= token.id %>"><%= token.symbol %> - <%= token.name %></option>
+                    <% }) %>
+                </select>
+                <small class="form-text"><%= t('assets.tokenHint') %></small>
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary"><%= t('assets.addAsset') %></button>
                 <a href="/assets" class="btn btn-secondary"><%= t('common.cancel') %></a>
@@ -54,5 +65,21 @@
     </main>
 
     <%- include('../partials/footer') %>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var groupSelect = document.getElementById('assetGroupId');
+            var tokenGroup = document.getElementById('tokenSelectGroup');
+
+            function toggleTokenSelect() {
+                var selectedOption = groupSelect.options[groupSelect.selectedIndex];
+                var groupType = selectedOption ? selectedOption.getAttribute('data-type') : '';
+                tokenGroup.style.display = groupType === 'crypto' ? 'block' : 'none';
+            }
+
+            groupSelect.addEventListener('change', toggleTokenSelect);
+            toggleTokenSelect();
+        });
+    </script>
 </body>
 </html>

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { AssetService } from '../services/assetService';
 import { AssetGroupService } from '../services/assetGroupService';
 import { t } from '../config/i18n';
+import { cryptoTokens } from '../config/cryptoTokens';
 
 const assetService = new AssetService();
 const assetGroupService = new AssetGroupService();
@@ -36,6 +37,7 @@ export class AssetController {
       res.render('assets/create', {
         title: t(locale, 'assets.addNew'),
         assetGroups,
+        cryptoTokens,
         user: req.session,
         error: req.flash('error')
       });
@@ -50,7 +52,7 @@ export class AssetController {
     const locale = (req.session as any)?.locale || 'en';
     try {
       const userId = (req.session as any).userId;
-      const { assetGroupId, name, description, currentValue, quantity } = req.body;
+      const { assetGroupId, name, description, currentValue, quantity, coinGeckoId } = req.body;
 
       const group = await assetGroupService.getById(parseInt(assetGroupId), userId);
       const currency = group?.currency || 'VND';
@@ -63,7 +65,8 @@ export class AssetController {
         parseFloat(currentValue),
         parseFloat(quantity),
         currency,
-        locale
+        locale,
+        group?.type === 'crypto' ? coinGeckoId : undefined
       );
 
       req.flash('success', t(locale, 'flash.assetCreateSuccess'));
@@ -93,6 +96,7 @@ export class AssetController {
         title: t(locale, 'assets.editTitle'),
         asset,
         assetGroups,
+        cryptoTokens,
         user: req.session,
         error: req.flash('error')
       });
@@ -108,7 +112,7 @@ export class AssetController {
     try {
       const userId = (req.session as any).userId;
       const assetId = parseInt(req.params.id);
-      const { assetGroupId, name, description, currentValue, quantity } = req.body;
+      const { assetGroupId, name, description, currentValue, quantity, coinGeckoId } = req.body;
 
       const group = await assetGroupService.getById(parseInt(assetGroupId), userId);
       const currency = group?.currency || 'VND';
@@ -122,7 +126,8 @@ export class AssetController {
         parseFloat(currentValue),
         parseFloat(quantity),
         currency,
-        locale
+        locale,
+        group?.type === 'crypto' ? coinGeckoId : undefined
       );
 
       if (!updated) {
@@ -181,16 +186,66 @@ export class AssetController {
         date: h.recordedAt
       }));
 
+      const isCryptoAsset = asset.assetGroup?.type === 'crypto' && asset.coinGeckoId;
+
       res.render('assets/history', {
         title: t(locale, 'assets.priceHistory') + ' - ' + asset.name,
         asset,
         priceHistory,
         chartData,
-        user: req.session
+        isCryptoAsset,
+        user: req.session,
+        success: req.flash('success'),
+        error: req.flash('error')
       });
     } catch (error) {
       console.error('Error fetching price history:', error);
       req.flash('error', t(locale, 'flash.genericError'));
+      res.redirect('/assets');
+    }
+  }
+
+  async refreshPrice(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
+    try {
+      const userId = (req.session as any).userId;
+      const assetId = parseInt(req.params.id);
+
+      const result = await assetService.refreshCryptoPrice(assetId, userId, locale);
+
+      if (result.success) {
+        req.flash('success', t(locale, 'flash.priceRefreshSuccess'));
+      } else {
+        req.flash('error', t(locale, 'flash.priceRefreshError'));
+      }
+
+      res.redirect(`/assets/${assetId}/history`);
+    } catch (error) {
+      console.error('Error refreshing price:', error);
+      req.flash('error', t(locale, 'flash.priceRefreshError'));
+      res.redirect('/assets');
+    }
+  }
+
+  async refreshAllPrices(req: Request, res: Response) {
+    const locale = (req.session as any)?.locale || 'en';
+    try {
+      const userId = (req.session as any).userId;
+
+      const result = await assetService.refreshAllCryptoPrices(userId, locale);
+
+      if (result.updated > 0) {
+        req.flash('success', t(locale, 'flash.allPricesRefreshSuccess', { count: result.updated.toString() }));
+      } else if (result.failed > 0) {
+        req.flash('error', t(locale, 'flash.priceRefreshError'));
+      } else {
+        req.flash('info', t(locale, 'flash.noCryptoAssets'));
+      }
+
+      res.redirect('/assets');
+    } catch (error) {
+      console.error('Error refreshing all prices:', error);
+      req.flash('error', t(locale, 'flash.priceRefreshError'));
       res.redirect('/assets');
     }
   }

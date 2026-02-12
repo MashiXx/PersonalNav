@@ -86,7 +86,10 @@ export class AssetGroupController {
       const userId = (req.session as any).userId;
       const { name, description, type, icon, currency } = req.body;
 
-      await assetGroupService.create(userId, name, description, type, icon, currency);
+      // Force USD for crypto groups
+      const finalCurrency = type === 'crypto' ? 'USD' : currency;
+
+      await assetGroupService.create(userId, name, description, type, icon, finalCurrency);
 
       req.flash('success', t(locale, 'flash.assetGroupCreateSuccess'));
       res.redirect('/asset-groups');
@@ -132,7 +135,10 @@ export class AssetGroupController {
       const groupId = parseInt(req.params.id);
       const { name, description, type, icon, currency } = req.body;
 
-      const updated = await assetGroupService.update(groupId, userId, name, description, type, icon, currency);
+      // Force USD for crypto groups
+      const finalCurrency = type === 'crypto' ? 'USD' : currency;
+
+      const updated = await assetGroupService.update(groupId, userId, name, description, type, icon, finalCurrency);
 
       if (!updated) {
         req.flash('error', t(locale, 'flash.assetGroupNotFound'));

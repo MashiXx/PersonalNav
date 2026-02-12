@@ -1,2 +1,1 @@
-Ngôn ngữ mặc định của trang là tiếng anh
-người dùng có thể đổi ngôn ngữ trong mục chỉnh sửa profile
+Bắt buộc crypto phải dùng loại tiền tệ là USD

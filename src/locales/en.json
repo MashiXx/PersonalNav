@@ -100,6 +100,7 @@
   "assetGroups.proportion": "Proportion",
   "assetGroups.emptyGroupState": "This group has no assets yet.",
   "assetGroups.editGroup": "Edit Group",
+  "assetGroups.cryptoUsdOnly": "Cryptocurrency groups must use USD",
 
   "assets.title": "Asset Management",
   "assets.addNew": "Add New Asset",
@@ -120,6 +121,12 @@
   "assets.noPriceHistory": "No price history yet",
   "assets.initialValue": "Initial value",
   "assets.valueUpdated": "Value updated",
+  "assets.selectToken": "Crypto Token",
+  "assets.selectTokenPlaceholder": "-- Select token --",
+  "assets.tokenHint": "Select a token to enable automatic price updates from CoinGecko",
+  "assets.refreshPrice": "Refresh Price",
+  "assets.refreshAllPrices": "Refresh Crypto Prices",
+  "assets.priceRefreshed": "Price refreshed from CoinGecko",
 
   "debts.title": "Debt Management",
   "debts.addNew": "Add New Debt",
@@ -207,6 +214,10 @@
   "flash.avatarProcessError": "Unable to process avatar image",
   "flash.duplicateUser": "Username or email already exists",
   "flash.imageOnly": "Only image files are accepted!",
+  "flash.priceRefreshSuccess": "Price updated successfully",
+  "flash.priceRefreshError": "Failed to update price. Please try again later.",
+  "flash.allPricesRefreshSuccess": "Updated prices for {count} crypto assets",
+  "flash.noCryptoAssets": "No crypto assets with tokens found",
 
   "chart.billion": "B",
   "chart.million": "M"

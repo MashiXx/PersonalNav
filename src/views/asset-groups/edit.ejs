@@ -32,13 +32,14 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="currencyGroup">
                 <label for="currency"><%= t('common.currencyUnit') %></label>
                 <select id="currency" name="currency" required class="form-control">
                     <% currencies.forEach(function(c) { %>
                         <option value="<%= c.code %>" <%= group.currency === c.code ? 'selected' : '' %>><%= c.code %> (<%= c.symbol %>)</option>
                     <% }) %>
                 </select>
+                <small id="cryptoCurrencyHint" class="form-text" style="display: none;"><%= t('assetGroups.cryptoUsdOnly') %></small>
             </div>
 
             <div class="form-group">
@@ -69,5 +70,33 @@
     </main>
 
     <%- include('../partials/footer') %>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var typeSelect = document.getElementById('type');
+            var currencySelect = document.getElementById('currency');
+            var cryptoHint = document.getElementById('cryptoCurrencyHint');
+            var form = document.querySelector('form');
+
+            function handleTypeChange() {
+                if (typeSelect.value === 'crypto') {
+                    currencySelect.value = 'USD';
+                    currencySelect.disabled = true;
+                    cryptoHint.style.display = 'block';
+                } else {
+                    currencySelect.disabled = false;
+                    cryptoHint.style.display = 'none';
+                }
+            }
+
+            // Re-enable before submit to ensure value is sent
+            form.addEventListener('submit', function() {
+                currencySelect.disabled = false;
+            });
+
+            typeSelect.addEventListener('change', handleTypeChange);
+            handleTypeChange();
+        });
+    </script>
 </body>
 </html>

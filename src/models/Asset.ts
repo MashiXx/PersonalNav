@@ -23,6 +23,9 @@ export class Asset {
   @Column({ type: 'varchar', length: 10, default: 'VND' })
   currency: string;
 
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  coinGeckoId: string;
+
   @ManyToOne(() => User, user => user.assets, { onDelete: 'CASCADE' })
   user: User;
 
