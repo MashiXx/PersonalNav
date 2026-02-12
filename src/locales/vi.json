@@ -218,6 +218,7 @@
   "flash.priceRefreshError": "Không thể cập nhật giá. Vui lòng thử lại sau.",
   "flash.allPricesRefreshSuccess": "Đã cập nhật giá cho {count} tài sản crypto",
   "flash.noCryptoAssets": "Không tìm thấy tài sản crypto có token",
+  "flash.registrationDisabled": "Chức năng đăng ký hiện đang tắt",
 
   "chart.billion": "tỷ",
   "chart.million": "tr"

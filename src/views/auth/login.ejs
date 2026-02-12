@@ -39,9 +39,11 @@
                 <button type="submit" class="btn btn-primary btn-block"><%= t('auth.login') %></button>
             </form>
 
+            <% if (typeof allowRegistration === 'undefined' || allowRegistration) { %>
             <p class="auth-footer">
                 <%= t('auth.noAccount') %> <a href="/auth/register"><%= t('auth.registerNow') %></a>
             </p>
+            <% } %>
         </div>
     </div>
 </body>

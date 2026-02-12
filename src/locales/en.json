@@ -218,6 +218,7 @@
   "flash.priceRefreshError": "Failed to update price. Please try again later.",
   "flash.allPricesRefreshSuccess": "Updated prices for {count} crypto assets",
   "flash.noCryptoAssets": "No crypto assets with tokens found",
+  "flash.registrationDisabled": "Registration is currently disabled",
 
   "chart.billion": "B",
   "chart.million": "M"

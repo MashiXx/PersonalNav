@@ -4,17 +4,27 @@ import { t } from '../config/i18n';
 
 const authService = new AuthService();
 
+function isRegistrationAllowed(): boolean {
+  return process.env.ALLOW_REGISTRATION !== 'false';
+}
+
 export class AuthController {
   async showLoginPage(req: Request, res: Response) {
     const locale = (req.session as any)?.locale || 'en';
     res.render('auth/login', {
       title: t(locale, 'auth.login'),
       error: req.flash('error'),
-      success: req.flash('success')
+      success: req.flash('success'),
+      allowRegistration: isRegistrationAllowed()
     });
   }
 
   async showRegisterPage(req: Request, res: Response) {
+    if (!isRegistrationAllowed()) {
+      const locale = (req.session as any)?.locale || 'en';
+      req.flash('error', t(locale, 'flash.registrationDisabled'));
+      return res.redirect('/auth/login');
+    }
     const locale = (req.session as any)?.locale || 'en';
     res.render('auth/register', {
       title: t(locale, 'auth.register'),
@@ -57,6 +67,10 @@ export class AuthController {
 
   async register(req: Request, res: Response) {
     const locale = (req.session as any)?.locale || 'en';
+    if (!isRegistrationAllowed()) {
+      req.flash('error', t(locale, 'flash.registrationDisabled'));
+      return res.redirect('/auth/login');
+    }
     try {
       const { username, password, confirmPassword, fullName, email } = req.body;
 
