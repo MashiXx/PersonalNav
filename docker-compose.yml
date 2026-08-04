@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    image: personal-nav:latest
+    container_name: personal-nav
+    restart: unless-stopped
+    env_file: .env
+    # Overrides anything set in .env — the container always runs a production build
+    # on the fixed internal port; the host port is mapped below.
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_DATABASE: /app/data/mashi_nav.sqlite
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      # Bind mounts so the SQLite file and uploaded images stay backup-friendly on the host.
+      - /home/mashi/xmashi/PersonalNav/data:/app/data
+      - /home/mashi/xmashi/PersonalNav/dist/public/uploads:/app/dist/public/uploads
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/auth/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3

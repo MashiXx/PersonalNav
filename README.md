@@ -85,6 +85,35 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## Run with Docker
+
+Requires Docker with Compose v2. No Node.js install needed on the host.
+
+```bash
+cp .env.example .env   # edit SESSION_SECRET before exposing this publicly
+mkdir -p data uploads  # so the mounted directories belong to you, not root
+docker compose up -d
+```
+
+Open [http://localhost:3000](http://localhost:3000). Change the published port with `PORT` in `.env`.
+
+The container runs a production build as a non-root user. Two host directories are bind-mounted so your data survives rebuilds:
+
+| Host path | Container path | Contents |
+|-----------|----------------|----------|
+| `./data` | `/app/data` | SQLite database |
+| `./uploads` | `/app/dist/public/uploads` | Uploaded avatars and custom group icons |
+
+Back up by copying those two directories. `NODE_ENV`, `PORT`, and `DB_DATABASE` are fixed by `docker-compose.yml`; every other variable comes from `.env`.
+
+```bash
+docker compose logs -f      # follow logs
+docker compose up -d --build  # rebuild after code changes
+docker compose down         # stop (data and uploads are kept)
+```
+
+On Linux, if your user ID is not `1000` the container cannot write to the mounted directories. Fix it once with `sudo chown -R 1000:1000 data uploads`. macOS and Windows need no such step.
+
 ## Project Structure
 
 ```

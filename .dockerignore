@@ -1,0 +1,16 @@
+# Patterns are relative to the build context root, so `images` here is the
+# repo's README screenshots — src/public/images is still copied into the image.
+.git
+.gitignore
+node_modules
+dist
+data
+uploads
+.env
+*.log
+.DS_Store
+images
+docs
+Dockerfile
+docker-compose.yml
+.dockerignore
