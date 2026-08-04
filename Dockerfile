@@ -11,7 +11,10 @@ RUN npm ci --omit=dev
 FROM node:20-bookworm-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+# --include=dev is required, not decorative: PaaS builders (Coolify, Dokku, …)
+# inject NODE_ENV=production as a build arg into every stage, and npm then drops
+# devDependencies — taking @types/* with them and breaking tsc.
+RUN npm ci --include=dev
 COPY tsconfig.json ./
 COPY scripts ./scripts
 COPY src ./src
